@@ -13,3 +13,13 @@ NOTE: Will need to consider the need of a frontend. I will be setting up API's s
 BIG NOTE: index.js will execute the script and it will have cascading affect
 
 17th April: Will create the backend first so then I know what to make for the frontend. 
+
+Every game that comes on Factor has an ID. We can add that ID onto each betable game so we don't have to check it again. 
+We can create an assumption that each game found on factor will have a betable game. We don't want to have to go to the work of pairing games together unless we actually have to. 
+
+* Grab games from factor
+* Check database with findOne({factorId: factorIdNumber})
+
+If it exists, nothing else needs done. If it doesn't exist, we should pair that game up with a betable game and then add that to the database. 
+
+Working on this
