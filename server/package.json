@@ -39,6 +39,7 @@
     "domelementtype": "^2.3.0",
     "domhandler": "^4.3.1",
     "domutils": "^2.8.0",
+    "dotenv": "^16.0.0",
     "ecc-jsbn": "^0.1.2",
     "end-of-stream": "^1.4.4",
     "entities": "^2.2.0",
