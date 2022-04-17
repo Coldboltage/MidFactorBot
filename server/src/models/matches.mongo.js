@@ -16,5 +16,8 @@ const matchesSchema = new mongoose.Schema({
   },
   matchStart: {type: Number, required: true},
   factorId: {type: Number, required: true},
-  midniteMatchId: {type: Number, required: true}
+  midniteMatchId: {type: Number, required: true},
+  upcoming: {type: Boolean, required: true}
 });
+
+module.exports = mongoose.model("Match", matchesSchema)

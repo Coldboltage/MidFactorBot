@@ -14,7 +14,9 @@ const main = async () => {
   const page = await browser.newPage();
   // Grab data from both sites. midnite uses request.js while factorgg can use axios. 403 from axios for some reason. 
   const factorgg = await getJsonData(page, "schedule", "https://www.factor.gg/", "axios");
-  const midnite = await getJsonData(page, "matches", "https://www.midnite.com/esports/lol/", "request")
+  const midnite = await getJsonData(page, "matches", "https://www.midnite.com/esports/lol/", "request");
+  // TODO: Import matches.model.js function here. 
+  // It should check the data from both factor and midnite and then pair up the games where possible. 
   await browser.close();
 };
 
