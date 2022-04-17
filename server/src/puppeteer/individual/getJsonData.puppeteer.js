@@ -17,8 +17,8 @@ const getJsonData = async (page, name, url, httpRequest) => {
     ) {
       console.log(test);
       const response = await axios(test);
-      const { matches } = response.data.pageProps.data;
-      result.push(matches);
+      const { upcomingMatches } = response.data.pageProps.data;
+      result.push(upcomingMatches);
     }
     // Use Request
     else if (
@@ -28,7 +28,7 @@ const getJsonData = async (page, name, url, httpRequest) => {
     ) {
       console.log(test);
       try {
-        const response = await rp.get(test);
+        const response = await rp.get(`${test}?page_size=200`);
         const data = JSON.parse(response);
         // console.log(data.data)
         result.push(data.data);
