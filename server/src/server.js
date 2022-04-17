@@ -4,7 +4,7 @@ const checkMidniteFactorData = require("./puppeteer/bundle/checkMidniteFactorDat
 const server = http.createServer();
 
 const startServer = async () => {
-  checkMidniteFactorData()
+  await checkMidniteFactorData()
 }
 
 startServer()
