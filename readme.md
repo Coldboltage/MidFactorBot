@@ -12,3 +12,4 @@ NOTE: Will need to consider the need of a frontend. I will be setting up API's s
 
 BIG NOTE: index.js will execute the script and it will have cascading affect
 
+17th April: Will create the backend first so then I know what to make for the frontend. 

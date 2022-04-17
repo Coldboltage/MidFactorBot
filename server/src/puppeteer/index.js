@@ -4,7 +4,7 @@ const axios = require("axios");
 const rp = require("request-promise");
 
 // Modules to test
-const checkMidniteFactorData = require("./puppeteer/bundle/checkMidniteFactorData.puppeteer")
+const checkMidniteFactorData = require("./bundle/checkMidniteFactorData.puppeteer")
 
 const main = async () => {
   // const browser = await puppeteer.launch({ headless: false });
