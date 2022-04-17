@@ -5,10 +5,16 @@ const matchesSchema = new mongoose.Schema({
   homeTeam: {
     name: { type: String, required: true },
     prediction: {type: Number, required: true},
+    odds: {type: Number, required: true },
+
   },
   awayTeam: {
     name: { type: String, required: true },
     prediction: {type: Number, required: true},
+    odds: {type: Number, required: true }
+
   },
-  matchStart: {type: Number, required: true}
+  matchStart: {type: Number, required: true},
+  factorId: {type: Number, required: true},
+  midniteMatchId: {type: Number, required: true}
 });
