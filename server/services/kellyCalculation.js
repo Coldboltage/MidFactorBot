@@ -11,24 +11,30 @@ const kelly = require("kelly");
 // =18.28%
 
 const grabGame = (game) => {
-  // const object = await MatchesDatabase.findOne({ factorId: 32282 });
+  // Game from database added. Validation has been checked
   const object = game
-  // console.log(object);
+  // Object name being used as a temp. 
   if (object.homeTeam.prediction > object.awayTeam.prediction) {
     // console.log(object.homeTeam.name);
     // console.log(kelly(object.homeTeam.odds, object.homeTeam.prediction));
-    const bankRoll = kelly(object.homeTeam.odds, object.homeTeam.prediction)
+    const bankRoll = kelly(+object.homeTeam.odds, object.homeTeam.prediction.toFixed(2))
     return {
       teamName: object.homeTeam.name,
-      bankRoll: bankRoll
+      // Half a Kelly instead of a full Kellly
+      bankRoll: +bankRoll.toFixed(2) / 2,
+      odds: +object.homeTeam.odds,
+      prediction: +object.homeTeam.prediction
+
     }
   } else {
     // console.log(object.awayTeam.name);
     // console.log(kelly(object.awayTeam.odds, object.awayTeam.prediction));
-    const bankRoll = kelly(object.awayTeam.odds, object.awayTeam.prediction)
+    const bankRoll = kelly(+object.awayTeam.odds, object.awayTeam.prediction.toFixed(2))
     return {
       teamName: object.awayTeam.name,
-      bankRoll: bankRoll
+      bankRoll: +bankRoll.toFixed(2) / 2,
+      odds: +object.awayTeam.odds,
+      prediction: +object.awayTeam.prediction
     }
   }
 };

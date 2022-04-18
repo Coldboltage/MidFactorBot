@@ -18,8 +18,12 @@ const matchesSchema = new mongoose.Schema({
   factorId: {type: Number, required: true},
   midniteMatchId: {type: Number, required: true},
   upcoming: {type: Boolean, required: true},
+  betSetup: {type: Boolean, required: true},
   betPlaced: {type: Boolean, required: true},
   teamToWin: {type: String},
+  bankRoll: {type: Number},
+  odds: {type: Number},
+  prediction: {type: Number},
   win: {type: Boolean}
 });
 

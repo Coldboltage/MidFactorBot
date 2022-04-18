@@ -10,6 +10,7 @@ const {setupBet} = require("./models/matches.model")
 const checkMidniteFactorData = require("./puppeteer/bundle/checkMidniteFactorData.puppeteer")
 const grabOne = require("../services/kellyCalculation")
 const getMoney = require("./puppeteer/bundle/checkMoney.puppeteer")
+const placeBet = require("./puppeteer/bundle/placeBet.puppeteer")
 
 const server = http.createServer(app);
 
@@ -18,7 +19,7 @@ cron.schedule('*/1 * * * *', async function() {
   await checkMidniteFactorData()
   await getMoney()
   await setupBet()
-
+  await placeBet()
 });
 
 const startServer = async () => {

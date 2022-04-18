@@ -1,4 +1,3 @@
-const { match } = require("minimatch");
 const MatchesDatabase = require("./matches.mongo");
 const grabGame = require("../../services/kellyCalculation")
 
@@ -80,6 +79,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             midniteMatchId: midniteGame.id,
             upcoming: true,
             betPlaced: false,
+            betSetup: false
           };
           // console.log(matchObject);
           matchGames.push(matchObject)
@@ -160,7 +160,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
 };
 
 const setupBet = async () => {
-  const betableGames = await MatchesDatabase.find({betPlaced: false})
+  const betableGames = await MatchesDatabase.find({betSetup: false})
   const timeToBetOnGames = betableGames.filter((game) => {
     // Find out when the game is
     const gameStartTime = Date.parse(game.matchStart)
@@ -174,25 +174,43 @@ const setupBet = async () => {
     // console.log(howLongLeftBeforeGameBegins)
     // Is the game happening in two hours
     console.log(howLongLeftBeforeGameBegins > 7200000 ? true : false)
+    // Determine if the game is ready to be bet on or not
     return howLongLeftBeforeGameBegins > 7200000 ? true : false
   })
-  console.log(`${timeToBetOnGames.length} betable games`)
-  // Setup games to bet on
+  console.log(`${timeToBetOnGames.length} games to setup for bets`)
+  // Setup games to bet on based on if timeToBetOnGames has games added to it
   if (timeToBetOnGames.length > 0) {
     console.log(`Setting up bets`)
     // Looping through each game to setup bet
-    timeToBetOnGames.forEach((game) => {
+    timeToBetOnGames.forEach(async (game) => {
       console.log(`Setup bet for: ${game.factorId}`)
+      // Game from database being checked
       const teamToBetOn = grabGame(game)
+      // teamToBetOn has populated data to bet on. 
+      const finalGameInformation = await MatchesDatabase.findOne({factorId: game.factorId})
+      console.log(`Game found where ${teamToBetOn.teamName} will be betted on`)
+      console.log(finalGameInformation)
       console.log(teamToBetOn)
-      
+      finalGameInformation.teamName = teamToBetOn.teamName;
+      finalGameInformation.bankRoll = teamToBetOn.bankRoll;
+      finalGameInformation.odds = teamToBetOn.odds;
+      finalGameInformation.prediction = teamToBetOn.prediction
+      finalGameInformation.betSetup = true
+      await finalGameInformation.save()
+      console.log("Final Informaton Saved")
     })
   }
+}
+
+const betableGamesWithFullInformation = async () => {
+  const gamesToBeOnWithData = await MatchesDatabase.find({betSetup: true})
+  return gamesToBeOnWithData;
 }
 
 module.exports = {
   matchFactorToMidniteGames,
   findAllMatches,
   setupBet,
+  betableGamesWithFullInformation,
 
 };
