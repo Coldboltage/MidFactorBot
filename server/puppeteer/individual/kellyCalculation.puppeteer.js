@@ -11,7 +11,7 @@ const kelly = require("kelly");
 // =18.28%
 
 const grabGame = async () => {
-  const object = await MatchesDatabase.findOne({ factorId: 32295 });
+  const object = await MatchesDatabase.findOne({ factorId: 32282 });
   console.log(object);
   if (object.homeTeam.prediction > object.awayTeam.prediction) {
     console.log(object.homeTeam.name);

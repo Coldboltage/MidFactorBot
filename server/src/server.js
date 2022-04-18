@@ -17,11 +17,15 @@ cron.schedule('*/1 * * * *', function() {
 });
 
 const startServer = async () => {
+  // Establish connection to MongoDB
   await mongoConnect()
+  // Grab whatever games we need to get
   await checkMidniteFactorData()
+  // Start backend server
   server.listen(8000, () => {
     console.log(`Listening on port ${8000}`)
   })
+  // Test to see if it will grab games
   await grabOne()
 }
 

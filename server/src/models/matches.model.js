@@ -1,8 +1,6 @@
+const { match } = require("minimatch");
 const mongoose = require("mongoose");
 const MatchesDatabase = require("./matches.mongo");
-
-// Midnite Home Team === Factor Team 1
-// Midnite Away Team === Factor Team 2
 
 const findAllMatches = async () => {
   return await MatchesDatabase.find({})
@@ -10,14 +8,11 @@ const findAllMatches = async () => {
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   console.log("Starting matchFactorToMidniteGames")
-  // Check each Factor game versus every Midnite game.
-  // First: Check if Midnite has a game with home team
-  // Second: In case Midnite have multiple games with the home team, check if the away team also matches
-  // Third: Check if the match happens within 2 hours using time protocol.
 
   const matchGames = []
 
   if (!midniteData || !factorggData) {
+    console.log("Something went wrong")
     return null
   }
 
@@ -73,12 +68,12 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             homeTeam: {
               name: midniteGame.home_team,
               prediction: factorGame.prematchWinProbability.team1Winprob,
-              odds: midniteGame.market.contracts[0].price,
+              odds: +midniteGame.market.contracts[0].price,
             },
             awayTeam: {
               name: midniteGame.away_team,
               prediction: factorGame.prematchWinProbability.team2Winprob,
-              odds: midniteGame.market.contracts[1].price,
+              odds: +midniteGame.market.contracts[1].price,
             },
             matchStart: midniteGame.start_time,
             factorId: factorGame.factorId,
@@ -88,11 +83,39 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           };
           // console.log(matchObject);
           matchGames.push(matchObject)
-          const findMatch = await MatchesDatabase.find({factorId: matchObject.factorId})
+          const findMatch = await MatchesDatabase.findOne({factorId: matchObject.factorId})
           console.log("calling database")
-          if (findMatch.length === 0) {
+          console.log(findMatch)
+          if (!findMatch) {
+            console.log("Couldn't find match ID so saving object to database")
             const match = await MatchesDatabase.create(matchObject)
             await match.save()
+          } else if (findMatch) {
+            console.log("ID Found, here's the object")
+            if (findMatch.homeTeam.prediction !== matchObject.homeTeam.prediction) {
+              console.log("Prediction has changed")
+              findMatch.homeTeam.prediction = +matchObject.homeTeam.prediction
+              findMatch.awayTeam.prediction = +matchObject.awayTeam.prediction
+              await findMatch.save()
+              console.log(`Saved changes to prediction for ${findMatch._id}`)
+
+            } else if (findMatch.homeTeam.odds !== matchObject.homeTeam.odds || findMatch.awayTeam.odds !== matchObject.awayTeam.odds) {
+              console.log("Odds have changed")
+              findMatch.homeTeam.odds = +matchObject.homeTeam.odds
+              findMatch.awayTeam.odds = +matchObject.awayTeam.odds
+              await findMatch.save()
+              console.log(`Saved changes to odds for ${findMatch._id}`)
+
+            }
+            console.log(`Predictions and Odds verified`)
+            // console.log(`Is prediction hometeams the same? ${findMatch.homeTeam.prediction === matchObject.homeTeam.prediction ? "Yes it is" : "No there's a change"}`)
+            // console.log(+findMatch.homeTeam.prediction)
+            // console.log(+matchObject.homeTeam.prediction)
+            // console.log(`Is odds for hometeams the same? ${findMatch.homeTeam.odds === matchObject.homeTeam.odds ? "Yes it is" : "No there's a change"}`)
+            // console.log(+findMatch.homeTeam.odds.toFixed(1))
+            // console.log(+matchObject.homeTeam.odds.toFixed(1))
+            // console.log("############################################################")
+            // console.log("############################################################")
           }
   
         } else {
@@ -131,8 +154,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       }
     });
   });
-  console.log(matchGames.length);
-
 };
 
 module.exports = {
