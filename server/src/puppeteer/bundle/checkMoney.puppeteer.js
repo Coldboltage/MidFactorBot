@@ -7,7 +7,7 @@ const puppeteer = require("puppeteer");
 // Modules needed for bundle
 const login = require("../individual/login.puppeteer")
 const grabMoney = require("../individual/grabMoney.puppeteer")
-const updateMoney = require("../../models/money.model")
+const {updateMoney} = require("../../models/money.model")
 
 const main = async () => {
   const browser = await puppeteer.launch({ headless: false });

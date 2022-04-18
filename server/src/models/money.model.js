@@ -1,7 +1,7 @@
 const MoneyDatabase = require("./money.mongo")
 
 const updateMoney = async (moneyAmount) => {
-  const amountMoneyValidation = await MoneyDatabase.findOne({amountAvailable})
+  const amountMoneyValidation = await MoneyDatabase.findOne({amountAvailable: 0})
   if (amountMoneyValidation) {
     amountMoneyValidation.amountAvailable = +moneyAmount;
     await amountMoneyValidation.save()
@@ -12,4 +12,8 @@ const updateMoney = async (moneyAmount) => {
     await addMoneyDocument.save()
     console.log("Money added")
   }
+}
+
+module.exports = {
+  updateMoney,
 }
