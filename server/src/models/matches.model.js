@@ -1,5 +1,4 @@
 const { match } = require("minimatch");
-const mongoose = require("mongoose");
 const MatchesDatabase = require("./matches.mongo");
 
 const findAllMatches = async () => {
@@ -92,7 +91,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             await match.save()
           } else if (findMatch) {
             console.log("ID Found, here's the object")
-            if (findMatch.homeTeam.prediction !== matchObject.homeTeam.prediction) {
+            if (findMatch.homeTeam.prediction !== matchObject.homeTeam.prediction || findMatch.awayTeam.prediction !== matchObject.awayTeam.prediction) {
               console.log("Prediction has changed")
               findMatch.homeTeam.prediction = +matchObject.homeTeam.prediction
               findMatch.awayTeam.prediction = +matchObject.awayTeam.prediction
@@ -156,7 +155,33 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   });
 };
 
+const setupBet = async () => {
+  const betableGames = await MatchesDatabase.find({betPlaced: false})
+  const timeToBetOnGames = betableGames.filter((game) => {
+    // Find out when the game is
+    const gameStartTime = Date.parse(game.matchStart)
+    // Get the current time
+    const timeRightNow = +Date.now()
+    // Difference between both
+    const howLongLeftBeforeGameBegins = gameStartTime - timeRightNow
+    console.log("Checking time variables")
+    console.log(gameStartTime)
+    console.log(timeRightNow)
+    console.log(howLongLeftBeforeGameBegins)
+    // Is the game happening in two hours
+    console.log(howLongLeftBeforeGameBegins > 7200000 ? true : false)
+    return howLongLeftBeforeGameBegins > 7200000 ? true : false
+  })
+  console.log(`${timeToBetOnGames.length} betable games`)
+  if (timeToBetOnGames.length > 0) {
+    console.log(`Setting up bets`)
+    timeToBetOnGames.forEach((game) => console.log(`Setup bet for: ${game.factorId}`))
+  }
+}
+
 module.exports = {
   matchFactorToMidniteGames,
   findAllMatches,
+  setupBet,
+
 };

@@ -5,16 +5,18 @@ require('dotenv').config()
 
 
 // Modules when server starts
-const checkMidniteFactorData = require("./puppeteer/bundle/checkMidniteFactorData.puppeteer")
 const {mongoConnect} = require("../services/mongo")
+const {setupBet} = require("./models/matches.model")
+// Puppeteer Modules
+const checkMidniteFactorData = require("./puppeteer/bundle/checkMidniteFactorData.puppeteer")
 const grabOne = require("../puppeteer/individual/kellyCalculation.puppeteer")
 
 const server = http.createServer(app);
 
-cron.schedule('*/1 * * * *', function() {
-  console.log('running a task every min');
-  checkMidniteFactorData()
-});
+// cron.schedule('*/1 * * * *', function() {
+//   console.log('running a task every min');
+//   checkMidniteFactorData()
+// });
 
 const startServer = async () => {
   // Establish connection to MongoDB
@@ -27,6 +29,8 @@ const startServer = async () => {
   })
   // Test to see if it will grab games
   await grabOne()
+  await setupBet()
+
 }
 
 startServer()
