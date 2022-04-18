@@ -18,7 +18,9 @@ const matchesSchema = new mongoose.Schema({
   factorId: {type: Number, required: true},
   midniteMatchId: {type: Number, required: true},
   upcoming: {type: Boolean, required: true},
-  betPlaced: {type: Boolean, required: true}
+  betPlaced: {type: Boolean, required: true},
+  teamToWin: {type: String},
+  win: {type: Boolean}
 });
 
 module.exports = mongoose.model("Match", matchesSchema)

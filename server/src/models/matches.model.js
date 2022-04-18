@@ -1,5 +1,6 @@
 const { match } = require("minimatch");
 const MatchesDatabase = require("./matches.mongo");
+const grabGame = require("../../services/kellyCalculation")
 
 const findAllMatches = async () => {
   return await MatchesDatabase.find({})
@@ -164,18 +165,25 @@ const setupBet = async () => {
     const timeRightNow = +Date.now()
     // Difference between both
     const howLongLeftBeforeGameBegins = gameStartTime - timeRightNow
-    console.log("Checking time variables")
-    console.log(gameStartTime)
-    console.log(timeRightNow)
-    console.log(howLongLeftBeforeGameBegins)
+    // console.log("Checking time variables")
+    // console.log(gameStartTime)
+    // console.log(timeRightNow)
+    // console.log(howLongLeftBeforeGameBegins)
     // Is the game happening in two hours
     console.log(howLongLeftBeforeGameBegins > 7200000 ? true : false)
     return howLongLeftBeforeGameBegins > 7200000 ? true : false
   })
   console.log(`${timeToBetOnGames.length} betable games`)
+  // Setup games to bet on
   if (timeToBetOnGames.length > 0) {
     console.log(`Setting up bets`)
-    timeToBetOnGames.forEach((game) => console.log(`Setup bet for: ${game.factorId}`))
+    // Looping through each game to setup bet
+    timeToBetOnGames.forEach((game) => {
+      console.log(`Setup bet for: ${game.factorId}`)
+      const teamToBetOn = grabGame(game)
+      console.log(teamToBetOn)
+      
+    })
   }
 }
 

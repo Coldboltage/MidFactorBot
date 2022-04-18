@@ -9,11 +9,11 @@ const {mongoConnect} = require("../services/mongo")
 const {setupBet} = require("./models/matches.model")
 // Puppeteer Modules
 const checkMidniteFactorData = require("./puppeteer/bundle/checkMidniteFactorData.puppeteer")
-const grabOne = require("../puppeteer/individual/kellyCalculation.puppeteer")
+const grabOne = require("../services/kellyCalculation")
 
 const server = http.createServer(app);
 
-// cron.schedule('*/1 * * * *', function() {
+// cron.schedule('*/10 * * * *', function() {
 //   console.log('running a task every min');
 //   checkMidniteFactorData()
 // });
@@ -28,7 +28,7 @@ const startServer = async () => {
     console.log(`Listening on port ${8000}`)
   })
   // Test to see if it will grab games
-  await grabOne()
+  // await grabOne()
   await setupBet()
 
 }
