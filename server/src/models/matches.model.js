@@ -85,11 +85,13 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           matchGames.push(matchObject)
           const findMatch = await MatchesDatabase.findOne({factorId: matchObject.factorId})
           console.log("calling database")
-          console.log(findMatch)
+          console.log(`Checking match: ${matchObject.factorId}`)
           if (!findMatch) {
             console.log("Couldn't find match ID so saving object to database")
             const match = await MatchesDatabase.create(matchObject)
             await match.save()
+            console.log(matchObject)
+            console.log("Match should be added")
           } else if (findMatch) {
             console.log("ID Found, here's the object")
             if (findMatch.homeTeam.prediction !== matchObject.homeTeam.prediction || findMatch.awayTeam.prediction !== matchObject.awayTeam.prediction) {
@@ -107,6 +109,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               console.log(`Saved changes to odds for ${findMatch._id}`)
 
             }
+            console.log(findMatch)
             console.log(`Predictions and Odds verified`)
             // console.log(`Is prediction hometeams the same? ${findMatch.homeTeam.prediction === matchObject.homeTeam.prediction ? "Yes it is" : "No there's a change"}`)
             // console.log(+findMatch.homeTeam.prediction)

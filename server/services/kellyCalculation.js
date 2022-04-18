@@ -17,18 +17,18 @@ const grabGame = (game) => {
   if (object.homeTeam.prediction > object.awayTeam.prediction) {
     // console.log(object.homeTeam.name);
     // console.log(kelly(object.homeTeam.odds, object.homeTeam.prediction));
-    const generatedOdds = kelly(object.homeTeam.odds, object.homeTeam.prediction)
+    const bankRoll = kelly(object.homeTeam.odds, object.homeTeam.prediction)
     return {
       teamName: object.homeTeam.name,
-      odds: generatedOdds
+      bankRoll: bankRoll
     }
   } else {
     // console.log(object.awayTeam.name);
     // console.log(kelly(object.awayTeam.odds, object.awayTeam.prediction));
-    const generatedOdds = kelly(object.awayTeam.odds, object.awayTeam.prediction)
+    const bankRoll = kelly(object.awayTeam.odds, object.awayTeam.prediction)
     return {
       teamName: object.awayTeam.name,
-      odds: generatedOdds
+      bankRoll: bankRoll
     }
   }
 };
