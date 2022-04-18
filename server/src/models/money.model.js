@@ -11,6 +11,5 @@ const updateMoney = async (moneyAmount) => {
     const addMoneyDocument = await MoneyDatabase.create({amountAvailable: +moneyAmount})
     await addMoneyDocument.save()
     console.log("Money added")
-
   }
 }
