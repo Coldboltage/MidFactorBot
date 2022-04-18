@@ -59,6 +59,7 @@
     "get-stream": "^5.2.0",
     "getpass": "^0.1.7",
     "glob": "^7.2.0",
+    "grab-json-factor": "file:..",
     "har-schema": "^2.0.0",
     "har-validator": "^5.1.5",
     "htmlparser2": "^6.1.0",
