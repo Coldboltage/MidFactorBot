@@ -9,12 +9,17 @@ const findAllMatches = async () => {
 }
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
+  console.log("Starting matchFactorToMidniteGames")
   // Check each Factor game versus every Midnite game.
   // First: Check if Midnite has a game with home team
   // Second: In case Midnite have multiple games with the home team, check if the away team also matches
   // Third: Check if the match happens within 2 hours using time protocol.
 
   const matchGames = []
+
+  if (!midniteData || !factorggData) {
+    return null
+  }
 
   const setup = factorggData.forEach((factorGame) => {
     const factorGameHomeTeam = factorGame.team1.fullName;
