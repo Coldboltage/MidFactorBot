@@ -79,8 +79,9 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             factorId: factorGame.factorId,
             midniteMatchId: midniteGame.id,
             upcoming: true,
+            betPlaced: false,
           };
-          console.log(matchObject);
+          // console.log(matchObject);
           matchGames.push(matchObject)
           const findMatch = await MatchesDatabase.find({factorId: matchObject.factorId})
           console.log("calling database")
@@ -88,8 +89,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             const match = await MatchesDatabase.create(matchObject)
             await match.save()
           }
-          console.log(findMatch.length)
-          
   
         } else {
           console.log("broken");
@@ -113,8 +112,9 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             factorId: factorGame.factorId,
             midniteMatchId: midniteGame.id,
             upcoming: true,
+            betPlaced: false
           };
-          console.log(matchObject);
+          // console.log(matchObject);
           matchGames.push(matchObject)
           const findMatch = await MatchesDatabase.find({factorId: matchObject.factorId})
           console.log("calling database")
@@ -122,7 +122,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             const match = await MatchesDatabase.create(matchObject)
             await match.save()
           }
-          console.log(findMatch.length)
         }
       }
     });
