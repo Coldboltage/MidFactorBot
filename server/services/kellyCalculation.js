@@ -19,7 +19,7 @@ const grabGame = (game) => {
     // console.log(kelly(object.homeTeam.odds, object.homeTeam.prediction));
     const bankRoll = kelly(+object.homeTeam.odds, object.homeTeam.prediction.toFixed(2))
     return {
-      teamName: object.homeTeam.name,
+      teamToWin: object.homeTeam.name,
       // Half a Kelly instead of a full Kellly
       bankRoll: +bankRoll.toFixed(2) / 2,
       odds: +object.homeTeam.odds,
@@ -31,7 +31,7 @@ const grabGame = (game) => {
     // console.log(kelly(object.awayTeam.odds, object.awayTeam.prediction));
     const bankRoll = kelly(+object.awayTeam.odds, object.awayTeam.prediction.toFixed(2))
     return {
-      teamName: object.awayTeam.name,
+      teamToWin: object.awayTeam.name,
       bankRoll: +bankRoll.toFixed(2) / 2,
       odds: +object.awayTeam.odds,
       prediction: +object.awayTeam.prediction

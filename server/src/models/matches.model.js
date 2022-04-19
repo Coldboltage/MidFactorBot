@@ -191,7 +191,7 @@ const setupBet = async () => {
       console.log(`Game found where ${teamToBetOn.teamName} will be betted on`)
       console.log(finalGameInformation)
       console.log(teamToBetOn)
-      finalGameInformation.teamName = teamToBetOn.teamName;
+      finalGameInformation.teamToWin = teamToBetOn.teamToWin;
       finalGameInformation.bankRoll = teamToBetOn.bankRoll;
       finalGameInformation.odds = teamToBetOn.odds;
       finalGameInformation.prediction = teamToBetOn.prediction

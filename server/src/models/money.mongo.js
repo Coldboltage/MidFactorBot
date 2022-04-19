@@ -5,6 +5,9 @@ const moneySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  isMain: {
+    type: Boolean,
+  }
 });
 
 module.exports = mongoose.model("Money", moneySchema)
