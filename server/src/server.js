@@ -36,6 +36,7 @@ const startServer = async () => {
   // await grabOne()
   await getMoney()
   await setupBet()
+ 
   
 }
 
