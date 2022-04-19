@@ -8,8 +8,10 @@ const login = require("../individual/login.puppeteer");
 const grabMoney = require("./grabMoney.puppeteer");
 
 const goToBetPage = async (listOfGamesToBetOn) => {
-  const browser = await puppeteer.launch({ headless: true,
-    args: ['--no-sandbox','--disable-setuid-sandbox'] });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   let page = await browser.newPage();
   await page.setViewport({
     width: 640,
@@ -39,7 +41,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
 
     // VALIDATION TO SEE IF MARKET IS HALTED
     const marketCheck = $(
-      "#content > div > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div:nth-child(1) > div > div:nth-child(3) > div.flex-auto > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div:nth-child(2) > div > div:nth-child(1) > button > div > span:nth-child(2) > svg"
+      "#content > div > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div:nth-child(1) > div > div:nth-child(3) > div.flex-auto > div > div:nth-child(2) > div:nth-child(2) > div > div:nth-child(1) svg"
     ).length;
 
     console.log("Validation check");
@@ -101,7 +103,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       await page.keyboard.type(`${amountToBet.toFixed(2)}`);
       // LOGIC FOR BETTING ADDED HERE
       console.log(game._id);
-      console.log(`The amount to bet for this game is: ${amountToBet}`)
+      console.log(`The amount to bet for this game is: ${amountToBet}`);
       // CLICK PLACE BET
       await page.waitForTimeout(1000);
       // await page.click(
