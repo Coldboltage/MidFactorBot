@@ -20,7 +20,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
   page = await login(page);
   if (listOfGamesToBetOn.length < 1) {
     console.log(
-      "There's no games here to bet on. This is the goToBetPage module"
+      "There's no games here to bet on. This is the goToBetPage module. DONE"
     );
   }
   for (const game of listOfGamesToBetOn) {
