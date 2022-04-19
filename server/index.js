@@ -7,7 +7,7 @@ const rp = require("request-promise");
 const checkMidniteFactorData = require("./server/puppeteer/bundle/checkMidniteFactorData.puppeteer")
 
 const main = async () => {
-  // const browser = await puppeteer.launch({ headless: false });
+  // const browser = await puppeteer.launch({ headless: true });
   // const page = await browser.newPage();
   checkMidniteFactorData()
 }

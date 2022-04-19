@@ -10,7 +10,7 @@ const rp = require("request-promise");
 const getJsonData = require("../individual/getJsonData.puppeteer")
 
 const main = async () => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   // Grab data
   const factorgg = await getJsonData(page, "schedule", "https://www.factor.gg/", "axios");

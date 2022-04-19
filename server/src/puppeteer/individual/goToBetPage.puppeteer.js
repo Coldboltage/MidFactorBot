@@ -8,7 +8,7 @@ const login = require("../individual/login.puppeteer");
 const grabMoney = require("./grabMoney.puppeteer");
 
 const goToBetPage = async (listOfGamesToBetOn) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   let page = await browser.newPage();
   await page.setViewport({
     width: 640,
