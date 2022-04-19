@@ -8,7 +8,7 @@ const grabMoney = async (page) => {
   );
   const html = await page.content()
   const $ = cheerio.load(html)
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(200);
   const grabNumber = +$("[component=CountUp]").text().replace("£", "")
 
   console.log(`The amount is ${grabNumber} for cheerio`);

@@ -14,19 +14,13 @@ const placeBet = require("./puppeteer/bundle/placeBet.puppeteer")
 
 const server = http.createServer(app);
 
-// cron.schedule('*/1 * * * *', async function() {
-//   console.log('running a task every min');
-//   await checkMidniteFactorData()
-//   await getMoney()
-//   await setupBet()
-//   await placeBet()
-// });
+
 
 const startServer = async () => {
   // Establish connection to MongoDB
   await mongoConnect()
   // Grab whatever games we need to get
-  await placeBet()
+  
   await checkMidniteFactorData()
   // Start backend server
   server.listen(8000, () => {
@@ -36,8 +30,14 @@ const startServer = async () => {
   // await grabOne()
   await getMoney()
   await setupBet()
- 
-  
+  await placeBet()
+  cron.schedule('*/1 * * * *', async function() {
+    console.log('running a task every min');
+    await checkMidniteFactorData()
+    await getMoney()
+    await setupBet()
+    await placeBet()
+  });
 }
 
 startServer()

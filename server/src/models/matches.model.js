@@ -60,7 +60,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
         );
         if (factorGameHomeTeamFixed === midniteGameHomeTeamFixed) {
           console.log("paired");
-          if (!midniteGame.market.contracts[0]) {
+          if ((!midniteGame.market.contracts[0]) || (midniteGame.market.contracts[0]).status === "halted"){
+            console.log("no price")
             return "no price";
           }
           const matchObject = {
@@ -207,10 +208,15 @@ const betableGamesWithFullInformation = async () => {
   return gamesToBeOnWithData;
 }
 
+const deleteMatch = async (id) => {
+   await MatchesDatabase.deleteOne({_id: id})
+}
+
 module.exports = {
   matchFactorToMidniteGames,
   findAllMatches,
   setupBet,
   betableGamesWithFullInformation,
+  deleteMatch,
 
 };
