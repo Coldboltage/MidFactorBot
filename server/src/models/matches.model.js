@@ -161,7 +161,9 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
 };
 
 const setupBet = async () => {
-  const betableGames = await MatchesDatabase.find({betSetup: false})
+  // Games which haven't been setup at all should be added
+  // betPlaced added as a filter so we don't try to bet on games already placed.
+  const betableGames = await MatchesDatabase.find({betSetup: false, betPlaced: false})
   const timeToBetOnGames = betableGames.filter((game) => {
     // Find out when the game is
     const gameStartTime = Date.parse(game.matchStart)
@@ -200,16 +202,25 @@ const setupBet = async () => {
       await finalGameInformation.save()
       console.log("Final Informaton Saved")
     })
+  } else {
+    console.log("No games to setup bets for because of the time :(")
   }
 }
 
 const betableGamesWithFullInformation = async () => {
-  const gamesToBeOnWithData = await MatchesDatabase.find({betSetup: true})
+  const gamesToBeOnWithData = await MatchesDatabase.find({betSetup: true, betPlaced: false})
   return gamesToBeOnWithData;
 }
 
 const deleteMatch = async (id) => {
    await MatchesDatabase.deleteOne({_id: id})
+}
+
+const betPlaced = async (id) => {
+  const gameWithBetPlaced = await MatchesDatabase.findOne({_id: id})
+  gameWithBetPlaced.betPlaced = true;
+  await gameWithBetPlaced.save()
+  console.log("Bet should be placed correctly in database")
 }
 
 module.exports = {
@@ -218,5 +229,5 @@ module.exports = {
   setupBet,
   betableGamesWithFullInformation,
   deleteMatch,
-
+  betPlaced,
 };
