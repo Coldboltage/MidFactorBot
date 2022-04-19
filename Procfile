@@ -1,1 +1,1 @@
-web: install-start-server
+web: start-server
