@@ -10,7 +10,8 @@ const grabMoney = require("../individual/grabMoney.puppeteer")
 const {updateMoney} = require("../../models/money.model")
 
 const main = async () => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: true,
+    args: ['--no-sandbox','--disable-setuid-sandbox'] });
   const page = await browser.newPage();
   // Grab data
   const loginPage = await login(page);

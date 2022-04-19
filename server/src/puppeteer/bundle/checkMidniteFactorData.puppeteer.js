@@ -11,7 +11,8 @@ const getJsonData = require("../individual/getJsonData.puppeteer")
 const {matchFactorToMidniteGames} = require("../../models/matches.model")
 
 const main = async () => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: true,
+    args: ['--no-sandbox','--disable-setuid-sandbox'] });
   const page = await browser.newPage();
   // Grab data from both sites. midnite uses request.js while factorgg can use axios. 403 from axios for some reason. 
   const factorggData = await getJsonData(page, "index", "https://www.factor.gg/", "axios");
