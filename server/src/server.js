@@ -21,7 +21,7 @@ const startServer = async () => {
   
   await checkMidniteFactorData()
   // Start backend server
-  server.listen(8000, () => {
+  server.listen(process.env.PORT || 3000, () => {
     console.log(`Listening on port ${8000}`)
   })
   // Test to see if it will grab games
