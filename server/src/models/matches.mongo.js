@@ -24,6 +24,7 @@ const matchesSchema = new mongoose.Schema({
   bankRoll: {type: Number},
   odds: {type: Number},
   prediction: {type: Number},
+  timeToBet: {type: Boolean, required: true},
   win: {type: Boolean}
 });
 

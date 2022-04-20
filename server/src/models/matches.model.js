@@ -102,6 +102,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             upcoming: true,
             betPlaced: false,
             betSetup: false,
+            timeToBet: false
           };
           // console.log(matchObject);
           matchGames.push(matchObject);
@@ -172,6 +173,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             midniteMatchId: midniteGame.id,
             upcoming: true,
             betPlaced: false,
+            timeToBet: false,
           };
           // console.log(matchObject);
           matchGames.push(matchObject);
@@ -196,7 +198,10 @@ const setupBet = async () => {
     betSetup: false,
     betPlaced: false,
   });
-  const timeToBetOnGames = betableGames.filter((game) => {
+  const timeToBetOnGames = betableGames.filter(async(game) => {
+    // Get game from database and determine if we should set it to timeToBet
+    const databaseGame = await MatchesDatabase.findOne({_id: game._id})
+    console.log(`Checking game time for ${game._id}`)
     // Find out when the game is
     const gameStartTime = Date.parse(game.matchStart);
     // Get the current time
@@ -208,9 +213,20 @@ const setupBet = async () => {
     // console.log(timeRightNow)
     // console.log(howLongLeftBeforeGameBegins)
     // Is the game happening in two hours
-    console.log(`Is it time for this game to be betted on? ${howLongLeftBeforeGameBegins < 7200000 ? true : false}`);
-    console.log(`Hours before game starts: ${howLongLeftBeforeGameBegins / 3600000}`)
+    console.log(
+      `Is it time for this game to be betted on? ${
+        howLongLeftBeforeGameBegins < 7200000 ? true : false
+      }`
+    );
+    console.log(
+      `Hours before game starts: ${howLongLeftBeforeGameBegins / 3600000}`
+    );
     // Determine if the game is ready to be bet on or not
+    // If the game passes the test below, timeToBe = true, else it's false. 
+    if (howLongLeftBeforeGameBegins < 7200000) {
+      databaseGame.timeToBet = true
+      await databaseGame.save()
+    }
     return howLongLeftBeforeGameBegins < 7200000 ? true : false;
   });
   console.log(`${timeToBetOnGames.length} games to setup for bets`);
@@ -246,6 +262,7 @@ const betableGamesWithFullInformation = async () => {
   const gamesToBeOnWithData = await MatchesDatabase.find({
     betSetup: true,
     betPlaced: false,
+    timeToBet: true
   });
   return gamesToBeOnWithData;
 };

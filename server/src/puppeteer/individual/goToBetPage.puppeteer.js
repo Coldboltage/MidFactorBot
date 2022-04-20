@@ -34,6 +34,14 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     await page.goto(
       `https://www.midnite.com/esports/lol/match/${game.midniteMatchId}/`
     );
+    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+    await page.waitForTimeout(100000)
+    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+
     await page.waitForSelector("[Component=MarketContract]");
 
     const html = await page.content();
