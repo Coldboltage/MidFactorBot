@@ -297,6 +297,58 @@ const betableGamesWithFullInformation = async () => {
   return gamesToBeOnWithData;
 };
 
+const hasGameEnded = async (finishedFactorggMatches) => {
+  const gamesWhichArePlaced = await MatchesDatabase.find({betPlaced: true})
+  console.log("Checking if any game has been placed")
+  for await (const game of gamesWhichArePlaced) {
+    console.log(`Checking if game ${game.midniteMatchId} is done. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
+    await new Promise(resolve => setTimeout(resolve, 100000));
+    const checkGame = finishedFactorggMatches.find((factorListGame) =>{
+      // Check through all games
+      if (game.factorId === factorListGame.factorId) {
+        return game
+      }
+      console.log(`Game isn't done`)
+    })
+    // Game found: Get the max games, check score 
+    const {score: {team1Score, team2Score}} = checkGame
+    const seriesMax = checkGame.games[0]
+    
+    console.log(`Game ${game.midniteMatchId} is done. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
+    if (team1Score > team2Score) {
+      if(seriesMax / 2 <= team1Score) {
+        // Team 1 has won the series, the home team
+        const finishedGame = await MatchesDatabase.findOne({_id:game._id})
+        finishedGame.upcoming = false
+        // We check if our chosen team, is team1, which is the hometeam
+        if (game.teamToWin === game.homeTeam.name) {
+          finishedGame.won = true
+          await finishedGame.save()
+        } else {
+          finishedGame.won = false
+          await finishedGame.save()
+        }
+      }
+    } else {
+      if(seriesMax / 2 <= team2Score) {
+        // Team 2 has won the series, the away team
+        const finishedGameWinner = await MatchesDatabase.findOne({_id:game._id})
+        finishedGameWinner.upcoming = false
+        // We check if our chosen team, is team1, which is the hometeam
+        if (game.teamToWin === game.awayTeam.name) {
+          finishedGame.won = true
+          await finishedGame.save()
+        } else {
+          finishedGame.won = false
+          await finishedGame.save()
+        }
+      }
+    }
+  }
+  console.log(`No game has been placed`)
+  console.log("hasGameEnded function ended")
+}
+
 const deleteMatch = async (id) => {
   await MatchesDatabase.deleteOne({ _id: id });
 };
@@ -317,6 +369,7 @@ module.exports = {
   gamesThatLose,
   setupBet,
   betableGamesWithFullInformation,
+  hasGameEnded,
   deleteMatch,
   betPlaced,
 };

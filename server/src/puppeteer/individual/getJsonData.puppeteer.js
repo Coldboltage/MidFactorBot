@@ -17,8 +17,8 @@ const getJsonData = async (page, name, url, httpRequest) => {
     ) {
       console.log(test);
       const response = await axios(test);
-      const { upcomingMatches } = response.data.pageProps.data;
-      result.push(upcomingMatches);
+      const { upcomingMatches, matches } = response.data.pageProps.data;
+      result.push(upcomingMatches, matches);
     }
     // Use Request
     else if (
@@ -39,8 +39,10 @@ const getJsonData = async (page, name, url, httpRequest) => {
   });
   await page.goto(url);
   // Destructure result array as it's own array so no array inception
-  const [extract] = result
-  return extract
+  const [item1, item2] = result
+  return {
+    item1, item2
+  }
 };
 
 module.exports = getJsonData

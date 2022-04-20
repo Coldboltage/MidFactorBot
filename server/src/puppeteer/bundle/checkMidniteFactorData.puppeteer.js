@@ -8,19 +8,22 @@ const rp = require("request-promise");
 
 // Modules needed for bundle
 const getJsonData = require("../individual/getJsonData.puppeteer")
-const {matchFactorToMidniteGames} = require("../../models/matches.model")
+const {matchFactorToMidniteGames, hasGameEnded} = require("../../models/matches.model")
 
 const main = async () => {
   const browser = await puppeteer.launch({ headless: true,
     args: ['--no-sandbox','--disable-setuid-sandbox'] });
   const page = await browser.newPage();
   // Grab data from both sites. midnite uses request.js while factorgg can use axios. 403 from axios for some reason. 
-  const factorggData = await getJsonData(page, "index", "https://www.factor.gg/", "axios");
-  const midniteData = await getJsonData(page, "matches", "https://www.midnite.com/esports/lol/", "request");
+  const {item1:factorggData, item2:finishedFactorggMatches} = await getJsonData(page, "index", "https://www.factor.gg/", "axios");
+  const {item1:midniteData} = await getJsonData(page, "matches", "https://www.midnite.com/esports/lol/", "request");
+  await browser.close();
   // TODO: Import matches.model.js function here. 
   // It should check the data from both factor and midnite and then pair up the games where possible.
-  matchFactorToMidniteGames(factorggData, midniteData)
-  await browser.close();
+  await matchFactorToMidniteGames(factorggData, midniteData)
+  // TODO: Check if betPlaced. If placed, check if the match conditions of a win game is settled
+  // Match conditions. Max amount of games / 2. Series = 5/2 = 2.5. Winning team Won series > 2.5
+  await hasGameEnded(finishedFactorggMatches)
 };
 
 module.exports = main
