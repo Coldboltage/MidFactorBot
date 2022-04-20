@@ -14,11 +14,11 @@ const getFactorGame = async (id) => {
 }
 
 const gamesThatWon = async () => {
-  return await MatchesDatabase.find({won: true}).select("-__v -_id").sort({matchStart: -1}
+  return await MatchesDatabase.find({won: true}).select("-__v -_id").sort({matchStart: -1})
 }
 
 const gamesThatLose = async () => {
-  return await MatchesDatabase.find({won: false}).select("-__v -_id").sort({matchStart: -1}
+  return await MatchesDatabase.find({won: false}).select("-__v -_id").sort({matchStart: -1})
 }
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
