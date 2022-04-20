@@ -2,7 +2,7 @@ const MatchesDatabase = require("./matches.mongo");
 const grabGame = require("../../services/kellyCalculation");
 
 const findAllMatches = async () => {
-  return await MatchesDatabase.find({}).select("-__v -_id");
+  return await MatchesDatabase.find({}).select("-__v -_id").sort({matchStart: 1});
 };
 
 const getMidniteGame = async (id) => {
@@ -14,11 +14,11 @@ const getFactorGame = async (id) => {
 }
 
 const gamesThatWon = async () => {
-  return await MatchesDatabase.find({won: true}).select("-__v -_id")
+  return await MatchesDatabase.find({won: true}).select("-__v -_id").sort({matchStart: -1}
 }
 
 const gamesThatLose = async () => {
-  return await MatchesDatabase.find({won: false}).select("-__v -_id")
+  return await MatchesDatabase.find({won: false}).select("-__v -_id").sort({matchStart: -1}
 }
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
