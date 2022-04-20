@@ -195,7 +195,7 @@ const setupBet = async () => {
   // Games which haven't been setup at all should be added
   // betPlaced added as a filter so we don't try to bet on games already placed.
   const betableGames = await MatchesDatabase.find({
-    betSetup: false,
+    timeToBet: false,
     betPlaced: false,
   });
   const timeToBetOnGames = betableGames.filter(async(game) => {
@@ -226,7 +226,7 @@ const setupBet = async () => {
     if (howLongLeftBeforeGameBegins < 7200000) {
       databaseGame.timeToBet = true
       await databaseGame.save()
-    }
+    } 
     return true
   });
   console.log(`${timeToBetOnGames.length} games to setup for bets`);
