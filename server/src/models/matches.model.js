@@ -46,7 +46,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
     const factorGameHomeTeamFixed = factorGame.team1.fullName
       .toLowerCase()
       .replace("esports", "")
-      .replace("esport", "")
+      // .replace("esport", "")
       .replace("gaming", "")
       .replace("academy", "")
       .replace("team", "")
@@ -55,7 +55,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
     const factorGameAwayTeamFixed = factorGame.team2.fullName
       .toLowerCase()
       .replace("esports", "")
-      .replace("esport", "")
+      // .replace("esport", "")
       .replace("gaming", "")
       .replace("academy", "")
       .replace("team", "")
@@ -69,7 +69,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       const midniteGameHomeTeamFixed = midniteGame.home_team
         .toLowerCase()
         .replace("esports", "")
-        .replace("esport", "")
+        // .replace("esport", "")
         .replace("gaming", "")
         .replace("academy", "")
         .replace("team", "")
@@ -78,7 +78,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       const midniteGameAwayTeamFixed = midniteGame.away_team
         .toLowerCase()
         .replace("esports", "")
-        .replace("esport", "")
+        // .replace("esport", "")
         .replace("gaming", "")
         .replace("academy", "")
         .replace("team", "")
@@ -302,7 +302,6 @@ const hasGameEnded = async (finishedFactorggMatches) => {
   console.log("Checking if any game has been placed")
   for await (const game of gamesWhichArePlaced) {
     console.log(`Checking if game ${game.midniteMatchId} is done. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
-    await new Promise(resolve => setTimeout(resolve, 100000));
     const checkGame = finishedFactorggMatches.find((factorListGame) =>{
       // Check through all games
       if (game.factorId === factorListGame.factorId) {
@@ -313,7 +312,7 @@ const hasGameEnded = async (finishedFactorggMatches) => {
     // Game found: Get the max games, check score 
     const {score: {team1Score, team2Score}} = checkGame
     const seriesMax = checkGame.games[0]
-    
+
     console.log(`Game ${game.midniteMatchId} is done. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
     if (team1Score > team2Score) {
       if(seriesMax / 2 <= team1Score) {
