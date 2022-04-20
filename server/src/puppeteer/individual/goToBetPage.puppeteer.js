@@ -106,14 +106,14 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(`The amount to bet for this game is: ${amountToBet}`);
       // CLICK PLACE BET
       await page.waitForTimeout(1000);
-      // await page.click(
-      //   "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
-      // );
-      // await page.waitForTimeout(1000);
-      // // Look for something to confirm a bet has happened
-      // await page.waitForSelector(
-      //   "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
-      // );
+      await page.click(
+        "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
+      );
+      await page.waitForTimeout(1000);
+      // Look for something to confirm a bet has happened
+      await page.waitForSelector(
+        "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
+      );
       console.log("Bet has been placed, waiting for confirmation");
       // ADD SELECTOR
       console.log(
