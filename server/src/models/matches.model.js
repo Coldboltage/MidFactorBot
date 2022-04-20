@@ -227,7 +227,7 @@ const setupBet = async () => {
       databaseGame.timeToBet = true
       await databaseGame.save()
     }
-    return howLongLeftBeforeGameBegins < 7200000 ? true : false;
+    return true
   });
   console.log(`${timeToBetOnGames.length} games to setup for bets`);
   // Setup games to bet on based on if timeToBetOnGames has games added to it
