@@ -37,6 +37,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
     // formula based name
     const factorGameHomeTeamFixed = factorGame.team1.fullName
       .toLowerCase()
+      .replace("esport", "")
       .replace("esports", "")
       .replace("gaming", "")
       .replace("academy", "")
@@ -45,6 +46,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       .replace(" ", "");
     const factorGameAwayTeamFixed = factorGame.team2.fullName
       .toLowerCase()
+      .replace("esport", "")
       .replace("esports", "")
       .replace("gaming", "")
       .replace("academy", "")
@@ -58,6 +60,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       // formula based name
       const midniteGameHomeTeamFixed = midniteGame.home_team
         .toLowerCase()
+        .replace("esport", "")
         .replace("esports", "")
         .replace("gaming", "")
         .replace("academy", "")
@@ -66,6 +69,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
         .replace(" ", "");
       const midniteGameAwayTeamFixed = midniteGame.away_team
         .toLowerCase()
+        .replace("esport", "")
         .replace("esports", "")
         .replace("gaming", "")
         .replace("academy", "")
