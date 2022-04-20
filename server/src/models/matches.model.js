@@ -2,7 +2,7 @@ const MatchesDatabase = require("./matches.mongo");
 const grabGame = require("../../services/kellyCalculation");
 
 const findAllMatches = async () => {
-  return await MatchesDatabase.find({});
+  return await MatchesDatabase.find({}).select("-__v -_id");
 };
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
@@ -251,7 +251,7 @@ const setupBet = async () => {
       finalGameInformation.prediction = teamToBetOn.prediction;
       finalGameInformation.betSetup = true;
       await finalGameInformation.save();
-      console.log("Final Informaton Saved");
+      console.log("Final Informaton Saved, team predicted to win determined updated");
     });
   } else {
     console.log("No games to setup bets for because of the time :(");
