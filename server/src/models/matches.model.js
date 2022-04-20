@@ -2,24 +2,32 @@ const MatchesDatabase = require("./matches.mongo");
 const grabGame = require("../../services/kellyCalculation");
 
 const findAllMatches = async () => {
-  return await MatchesDatabase.find({}).select("-__v -_id").sort({matchStart: 1});
+  return await MatchesDatabase.find({})
+    .select("-__v -_id")
+    .sort({ matchStart: 1 });
 };
 
 const getMidniteGame = async (id) => {
-  return await MatchesDatabase.findOne({midniteMatchId: id}).select("-__v -_id")
-}
+  return await MatchesDatabase.findOne({ midniteMatchId: id }).select(
+    "-__v -_id"
+  );
+};
 
 const getFactorGame = async (id) => {
-  return await MatchesDatabase.findOne({factorId: id}).select("-__v -_id")
-}
+  return await MatchesDatabase.findOne({ factorId: id }).select("-__v -_id");
+};
 
 const gamesThatWon = async () => {
-  return await MatchesDatabase.find({won: true}).select("-__v -_id").sort({matchStart: -1})
-}
+  return await MatchesDatabase.find({ won: true })
+    .select("-__v -_id")
+    .sort({ matchStart: -1 });
+};
 
 const gamesThatLose = async () => {
-  return await MatchesDatabase.find({won: false}).select("-__v -_id").sort({matchStart: -1})
-}
+  return await MatchesDatabase.find({ won: false })
+    .select("-__v -_id")
+    .sort({ matchStart: -1 });
+};
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   console.log("Starting matchFactorToMidniteGames");
@@ -37,8 +45,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
     // formula based name
     const factorGameHomeTeamFixed = factorGame.team1.fullName
       .toLowerCase()
-      .replace("esport", "")
       .replace("esports", "")
+      .replace("esport", "")
       .replace("gaming", "")
       .replace("academy", "")
       .replace("team", "")
@@ -46,8 +54,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       .replace(" ", "");
     const factorGameAwayTeamFixed = factorGame.team2.fullName
       .toLowerCase()
-      .replace("esport", "")
       .replace("esports", "")
+      .replace("esport", "")
       .replace("gaming", "")
       .replace("academy", "")
       .replace("team", "")
@@ -60,8 +68,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       // formula based name
       const midniteGameHomeTeamFixed = midniteGame.home_team
         .toLowerCase()
-        .replace("esport", "")
         .replace("esports", "")
+        .replace("esport", "")
         .replace("gaming", "")
         .replace("academy", "")
         .replace("team", "")
@@ -69,8 +77,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
         .replace(" ", "");
       const midniteGameAwayTeamFixed = midniteGame.away_team
         .toLowerCase()
-        .replace("esport", "")
         .replace("esports", "")
+        .replace("esport", "")
         .replace("gaming", "")
         .replace("academy", "")
         .replace("team", "")
@@ -122,7 +130,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             upcoming: true,
             betPlaced: false,
             betSetup: false,
-            timeToBet: false
+            timeToBet: false,
           };
           // console.log(matchObject);
           matchGames.push(matchObject);
@@ -218,10 +226,10 @@ const setupBet = async () => {
     timeToBet: false,
     betPlaced: false,
   });
-  const timeToBetOnGames = betableGames.filter(async(game) => {
+  const timeToBetOnGames = betableGames.filter(async (game) => {
     // Get game from database and determine if we should set it to timeToBet
-    const databaseGame = await MatchesDatabase.findOne({_id: game._id})
-    console.log(`Checking game time for ${game._id}`)
+    const databaseGame = await MatchesDatabase.findOne({ _id: game._id });
+    console.log(`Checking game time for ${game._id}`);
     // Find out when the game is
     const gameStartTime = Date.parse(game.matchStart);
     // Get the current time
@@ -242,12 +250,12 @@ const setupBet = async () => {
       `Hours before game starts: ${howLongLeftBeforeGameBegins / 3600000}`
     );
     // Determine if the game is ready to be bet on or not
-    // If the game passes the test below, timeToBe = true, else it's false. 
+    // If the game passes the test below, timeToBe = true, else it's false.
     if (howLongLeftBeforeGameBegins < 7200000) {
-      databaseGame.timeToBet = true
-      await databaseGame.save()
-    } 
-    return true
+      databaseGame.timeToBet = true;
+      await databaseGame.save();
+    }
+    return true;
   });
   console.log(`${timeToBetOnGames.length} games to setup for bets`);
   // Setup games to bet on based on if timeToBetOnGames has games added to it
@@ -271,7 +279,9 @@ const setupBet = async () => {
       finalGameInformation.prediction = teamToBetOn.prediction;
       finalGameInformation.betSetup = true;
       await finalGameInformation.save();
-      console.log("Final Informaton Saved, team predicted to win determined updated");
+      console.log(
+        "Final Informaton Saved, team predicted to win determined updated"
+      );
     });
   } else {
     console.log("No games to setup bets for because of the time :(");
@@ -282,7 +292,7 @@ const betableGamesWithFullInformation = async () => {
   const gamesToBeOnWithData = await MatchesDatabase.find({
     betSetup: true,
     betPlaced: false,
-    timeToBet: true
+    timeToBet: true,
   });
   return gamesToBeOnWithData;
 };
