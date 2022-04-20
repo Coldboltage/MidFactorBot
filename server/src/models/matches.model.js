@@ -209,6 +209,7 @@ const setupBet = async () => {
     // console.log(howLongLeftBeforeGameBegins)
     // Is the game happening in two hours
     console.log(`Is it time for this game to be betted on? ${howLongLeftBeforeGameBegins < 7200000 ? true : false}`);
+    console.log(`Hours before game starts: ${howLongLeftBeforeGameBegins / 3600000}`)
     // Determine if the game is ready to be bet on or not
     return howLongLeftBeforeGameBegins < 7200000 ? true : false;
   });
