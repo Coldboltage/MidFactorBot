@@ -25,7 +25,7 @@ const matchesSchema = new mongoose.Schema({
   odds: {type: Number},
   prediction: {type: Number},
   timeToBet: {type: Boolean, required: true},
-  win: {type: Boolean}
+  won: {type: Boolean}
 });
 
 module.exports = mongoose.model("Match", matchesSchema)

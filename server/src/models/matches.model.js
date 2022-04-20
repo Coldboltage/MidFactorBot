@@ -5,6 +5,22 @@ const findAllMatches = async () => {
   return await MatchesDatabase.find({}).select("-__v -_id");
 };
 
+const getMidniteGame = async (id) => {
+  return await MatchesDatabase.findOne({midniteMatchId: id}).select("-__v -_id")
+}
+
+const getFactorGame = async (id) => {
+  return await MatchesDatabase.findOne({factorId: id}).select("-__v -_id")
+}
+
+const gamesThatWon = async () => {
+  return await MatchesDatabase.find({won: true}).select("-__v -_id")
+}
+
+const gamesThatLose = async () => {
+  return await MatchesDatabase.find({won: false}).select("-__v -_id")
+}
+
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   console.log("Starting matchFactorToMidniteGames");
 
@@ -281,6 +297,10 @@ const betPlaced = async (id) => {
 module.exports = {
   matchFactorToMidniteGames,
   findAllMatches,
+  getMidniteGame,
+  getFactorGame,
+  gamesThatWon,
+  gamesThatLose,
   setupBet,
   betableGamesWithFullInformation,
   deleteMatch,
