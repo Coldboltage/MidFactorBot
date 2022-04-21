@@ -298,6 +298,7 @@ const betableGamesWithFullInformation = async () => {
 };
 
 const hasGameEnded = async (finishedFactorggMatches) => {
+  // Check if any game has been placed. 
   const gamesWhichArePlaced = await MatchesDatabase.find({betPlaced: true})
   console.log("Checking if any game has been placed")
   for await (const game of gamesWhichArePlaced) {
@@ -356,7 +357,7 @@ const betPlaced = async (id) => {
   const gameWithBetPlaced = await MatchesDatabase.findOne({ _id: id });
   gameWithBetPlaced.betPlaced = true;
   await gameWithBetPlaced.save();
-  console.log("Bet should be placed correctly in database");
+  console.log(`Bet should be placed correctly in database for ${gameWithBetPlaced._id}`);
 };
 
 module.exports = {
