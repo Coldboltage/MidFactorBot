@@ -29,7 +29,7 @@ const startServer = async () => {
   await getMoney()
   await setupBet()
   await placeBet()
-  cron.schedule('*/3 * * * *', async function() {
+  cron.schedule('*/10 * * * *', async function() {
     console.log('running a task every min');
     await checkMidniteFactorData()
     await getMoney()
