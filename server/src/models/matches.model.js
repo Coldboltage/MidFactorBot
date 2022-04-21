@@ -299,22 +299,28 @@ const betableGamesWithFullInformation = async () => {
 
 const hasGameEnded = async (finishedFactorggMatches) => {
   // Check if any game has been placed. 
-  const gamesWhichArePlaced = await MatchesDatabase.find({betPlaced: true})
+  const gamesWhichArePlaced = await MatchesDatabase.find({betPlaced: true, upcoming: true})
   console.log("Checking if any game has been placed")
   for await (const game of gamesWhichArePlaced) {
-    console.log(`Checking if game ${game.midniteMatchId} is done. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
-    const checkGame = finishedFactorggMatches.find((factorListGame) =>{
-      // Check through all games
-      if (game.factorId === factorListGame.factorId) {
+    console.log(`Checking if game ${game.midniteMatchId} has started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
+    const checkGame = finishedFactorggMatches.find((factorMatchListGame) =>{
+      // Check through all games to see if a betPlaced game is on matches array of factorgg.
+      if (game.factorId === factorMatchListGame.factorId) {
+        console.log(`Game has started`)
         return game
+      } else {
+        console.log(`Game hasn't started`)
       }
-      console.log(`Game isn't done`)
     })
+    // If the game isn't on factor matches, it has not started yet.
+    if (!checkGame) continue
+    console.log("Destructre information")
     // Game found: Get the max games, check score 
     const {score: {team1Score, team2Score}} = checkGame
+    // the array is needed because the JSON demands it from factor
     const seriesMax = checkGame.games[0]
 
-    console.log(`Game ${game.midniteMatchId} is done. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
+    console.log(`Game ${game.midniteMatchId} is placed and started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
     if (team1Score > team2Score) {
       if(seriesMax / 2 <= team1Score) {
         // Team 1 has won the series, the home team
@@ -345,7 +351,7 @@ const hasGameEnded = async (finishedFactorggMatches) => {
       }
     }
   }
-  console.log(`No game has been placed`)
+  gamesWhichArePlaced.length > 0 ? console.log(`hasGame was used to check games had ended`) : console.log(`No game has been placed`)
   console.log("hasGameEnded function ended")
 }
 
