@@ -17,10 +17,12 @@ const userAgent = randomUseragent.getRandom()
 console.log(userAgent)
 
 const main = async () => {
+  // const browser = await puppeteer.launch({headless:false})
   const browser = await puppeteer.launch({ headless: true,
     args: ['--no-sandbox','--disable-setuid-sandbox'] });
   const page = await browser.newPage();
-  await page.setUserAgent(userAgent);
+  await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
+  await page.setCacheEnabled(false);
   // Grab data from both sites. midnite uses request.js while factorgg can use axios. 403 from axios for some reason. 
   const {item1:factorggData} = await getJsonData(page, "index", "https://www.factor.gg/", "axios", "upcomingMatches");
   const {item1:finishedFactorggMatches} = await getJsonData(page, "index", "https://www.factor.gg/", "axios", "matches");
