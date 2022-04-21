@@ -298,9 +298,11 @@ const setupBet = async () => {
   } else {
     console.log("No games to setup bets for because of the time :(");
   }
+  console.log("exiting setup bet")
 };
 
 const betableGamesWithFullInformation = async () => {
+  console.log("checking betableGamesWithFullInformaton")
   const gamesToBeOnWithData = await MatchesDatabase.find({
     betSetup: true,
     betPlaced: false,
@@ -321,6 +323,7 @@ const hasGameEnded = async (finishedFactorggMatches) => {
     console.log(
       `Checking if game ${game.midniteMatchId} has started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`
     );
+    console.log(finishedFactorggMatches);
     const checkGame = finishedFactorggMatches.find((factorMatchListGame) => {
       // Check through all games to see if a betPlaced game is on matches array of factorgg.
       if (game.factorId === factorMatchListGame.factorId) {
@@ -331,47 +334,45 @@ const hasGameEnded = async (finishedFactorggMatches) => {
       }
     });
     // If the game isn't on factor matches, it has not started yet.
-    if (!checkGame) continue;
+    if (!checkGame && factorMatchListGame.matchState === 400) continue;
     console.log("Destructre information");
     // Game found: Get the max games, check score
     const {
       score: { team1Score, team2Score },
     } = checkGame;
     // the array is needed because the JSON demands it from factor
-    const seriesMax = checkGame.games[0];
-
     console.log(
       `Game ${game.midniteMatchId} is placed and started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`
     );
     if (team1Score > team2Score) {
-      if (seriesMax / 2 <= team1Score) {
-        // Team 1 has won the series, the home team
-        const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
-        finishedGame.upcoming = false;
-        // We check if our chosen team, is team1, which is the hometeam
-        if (game.teamToWin === game.homeTeam.name) {
-          finishedGame.won = true;
-          await finishedGame.save();
-        } else {
-          finishedGame.won = false;
-          await finishedGame.save();
-        }
+      // Team 1 has won the series, the home team
+      const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
+      finishedGame.upcoming = false;
+      // We check if our chosen team, is team1, which is the hometeam
+      if (game.teamToWin === game.homeTeam.name) {
+        finishedGameWinner.won = true;
+        console.log("Team won")
+        await finishedGameWinner.save();
+      } else {
+        finishedGameWinner.won = false;
+        console.log("Team lost")
+        await finishedGameWinner.save();
       }
     } else {
-      if (seriesMax / 2 <= team2Score) {
-        // Team 2 has won the series, the away team
-        const finishedGameWinner = await MatchesDatabase.findOne({
-          _id: game._id,
-        });
-        finishedGameWinner.upcoming = false;
-        // We check if our chosen team, is team2, which is the away team
-        if (game.teamToWin === game.awayTeam.name) {
-          finishedGame.won = true;
-          await finishedGame.save();
-        } else {
-          finishedGame.won = false;
-          await finishedGame.save();
-        }
+      // Team 2 has won the series, the away team
+      const finishedGameWinner = await MatchesDatabase.findOne({
+        _id: game._id,
+      });
+      finishedGameWinner.upcoming = false;
+      // We check if our chosen team, is team2, which is the away team
+      if (game.teamToWin === game.awayTeam.name) {
+        finishedGameWinner.won = true;
+        console.log("Team won")
+        await finishedGameWinner.save();
+      } else {
+        finishedGameWinner.won = false;
+        console.log("Team lost")
+        await finishedGameWinner.save();
       }
     }
   }

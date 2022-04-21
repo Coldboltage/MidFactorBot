@@ -4,7 +4,7 @@ const axios = require("axios");
 const rp = require("request-promise");
 
 
-const getJsonData = async (page, name, url, httpRequest) => {
+const getJsonData = async (page, name, url, httpRequest, objectName) => {
   // Where the emitter results go into
   const result = []
   page.on("request", async (request) => {
@@ -15,10 +15,11 @@ const getJsonData = async (page, name, url, httpRequest) => {
       !test.includes("static") &&
       httpRequest === "axios"
     ) {
-      console.log(test);
+      // console.log(test);
       const response = await axios(test);
-      const { upcomingMatches, matches } = response.data.pageProps.data;
-      result.push(upcomingMatches, matches);
+      console.log(objectName)
+      const  extractData  = response.data.pageProps.data[objectName];
+      result.push(extractData);
     }
     // Use Request
     else if (

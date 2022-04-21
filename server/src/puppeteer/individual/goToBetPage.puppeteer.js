@@ -1,5 +1,8 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
+const randomUseragent = require("random-useragent");
+
+const userAgent = randomUseragent.getRandom()
 
 const { checkMoney, updateMoney } = require("../../models/money.model");
 const { deleteMatch, betPlaced } = require("../../models/matches.model");
@@ -12,10 +15,13 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  console.log("goToPage Started");
   // const browser = await puppeteer.launch({
   //   headless: false
   // });
   let page = await browser.newPage();
+  await page.setUserAgent(userAgent);
+
   await page.setViewport({
     width: 640,
     height: 800,
@@ -37,13 +43,25 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     await page.goto(
       `https://www.midnite.com/esports/lol/match/${game.midniteMatchId}/`
     );
-    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
-    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
-    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
-    await page.waitForTimeout(1000)
-    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
-    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
-    console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
+    console.log(
+      "ATTEMPT TO BET HAS BEEN PLACED CARE ############################"
+    );
+    console.log(
+      "ATTEMPT TO BET HAS BEEN PLACED CARE ############################"
+    );
+    console.log(
+      "ATTEMPT TO BET HAS BEEN PLACED CARE ############################"
+    );
+    await page.waitForTimeout(1000);
+    console.log(
+      "ATTEMPT TO BET HAS BEEN PLACED CARE ############################"
+    );
+    console.log(
+      "ATTEMPT TO BET HAS BEEN PLACED CARE ############################"
+    );
+    console.log(
+      "ATTEMPT TO BET HAS BEEN PLACED CARE ############################"
+    );
 
     await page.waitForSelector("[Component=MarketContract]");
 
@@ -114,9 +132,9 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(game._id);
       console.log(`The amount to bet for this game is: ${amountToBet}`);
       // CLICK PLACE BET
-      console.log("YOU ARE ABOUT TO CONFIRM A BET ######################")
-      console.log("YOU ARE ABOUT TO CONFIRM A BET ######################")
-      console.log("YOU ARE ABOUT TO CONFIRM A BET #####################")
+      console.log("YOU ARE ABOUT TO CONFIRM A BET ######################");
+      console.log("YOU ARE ABOUT TO CONFIRM A BET ######################");
+      console.log("YOU ARE ABOUT TO CONFIRM A BET #####################");
       await page.waitForTimeout(1000);
       await page.click(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"

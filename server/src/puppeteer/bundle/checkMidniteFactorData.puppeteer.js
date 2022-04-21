@@ -2,6 +2,8 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const rp = require("request-promise");
+const randomUseragent = require('random-useragent');
+
 
 // Check both Midnite and FactorGG for games available. 
 // NEXT STEP: Check which games exists on both 
@@ -10,12 +12,16 @@ const rp = require("request-promise");
 const getJsonData = require("../individual/getJsonData.puppeteer")
 const {matchFactorToMidniteGames, hasGameEnded} = require("../../models/matches.model")
 
+const userAgent = randomUseragent.getRandom()
+
 const main = async () => {
   const browser = await puppeteer.launch({ headless: true,
     args: ['--no-sandbox','--disable-setuid-sandbox'] });
   const page = await browser.newPage();
+  await page.setUserAgent(userAgent);
   // Grab data from both sites. midnite uses request.js while factorgg can use axios. 403 from axios for some reason. 
-  const {item1:factorggData, item2:finishedFactorggMatches} = await getJsonData(page, "index", "https://www.factor.gg/", "axios");
+  const {item1:factorggData} = await getJsonData(page, "index", "https://www.factor.gg/", "axios", "upcomingMatches");
+  const {item1:finishedFactorggMatches} = await getJsonData(page, "index", "https://www.factor.gg/", "axios", "matches");
   const {item1:midniteData} = await getJsonData(page, "matches", "https://www.midnite.com/esports/lol/", "request");
   await browser.close();
   // TODO: Import matches.model.js function here. 

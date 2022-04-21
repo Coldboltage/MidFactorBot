@@ -21,6 +21,7 @@ const updateMoney = async (moneyAmount) => {
 };
 
 const checkMoney = async () => {
+  console.log("money model checkMoney here")
   const amountMoney = await MoneyDatabase.findOne({ main: true });
   console.log(amountMoney);
   return +amountMoney.amountAvailable;
