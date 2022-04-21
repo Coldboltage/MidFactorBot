@@ -85,9 +85,10 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     );
 
     // List of elements used more than once
-
+    // Bottom of page, we click this to pull up betting slip
     const bettingSlip =
       "#__layout > div > div.bottom-0 > div > div:nth-child(1)";
+    // We double click this so to allow us to add in a money input
     const bettingPutNumber =
       "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div > div > div > div.ant-input-number-input-wrap > input";
 
@@ -100,9 +101,6 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       }
       console.log("click betting slip");
       await page.click(bettingSlip);
-      // await page.click(
-      //   "#__layout > div > div.bottom-0 > div > div:nth-child(1)"
-      // );
       await page.waitForTimeout(1000);
       console.log("double click");
       await page.waitForSelector(bettingPutNumber);
@@ -113,6 +111,9 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(game._id);
       console.log(`The amount to bet for this game is: ${amountToBet}`);
       // CLICK PLACE BET
+      console.log("YOU ARE ABOUT TO CONFIRM A BET ######################")
+      console.log("YOU ARE ABOUT TO CONFIRM A BET ######################")
+      console.log("YOU ARE ABOUT TO CONFIRM A BET #####################")
       await page.waitForTimeout(1000);
       await page.click(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
