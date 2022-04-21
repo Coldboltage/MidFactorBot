@@ -29,6 +29,16 @@ const gamesThatLose = async () => {
     .sort({ matchStart: -1 });
 };
 
+const gamesPlacedBet = async () => {
+  return await MatchesDatabase.find({
+    betSetup: true,
+    betPlaced: true,
+    timeToBet: true,
+  })
+    .select("-__v -_id")
+    .sort({ matchStart: 1 });
+};
+
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   console.log("Starting matchFactorToMidniteGames");
 
@@ -242,16 +252,16 @@ const setupBet = async () => {
     // console.log(howLongLeftBeforeGameBegins)
     // Is the game happening in two hours
     console.log(
-      `Is it time for this game to be betted on? https://www.midnite.com/esports/lol/match/${game.midniteMatchId}/ ${
-        howLongLeftBeforeGameBegins < 7200000 ? true : false
-      }`
+      `Is it time for this game to be betted on? https://www.midnite.com/esports/lol/match/${
+        game.midniteMatchId
+      }/ ${howLongLeftBeforeGameBegins < 3600000 ? true : false}`
     );
     console.log(
       `Hours before game starts: ${howLongLeftBeforeGameBegins / 3600000}`
     );
     // Determine if the game is ready to be bet on or not
     // If the game passes the test below, timeToBe = true, else it's false.
-    if (howLongLeftBeforeGameBegins < 7200000) {
+    if (howLongLeftBeforeGameBegins < 3600000) {
       databaseGame.timeToBet = true;
       await databaseGame.save();
     }
@@ -270,7 +280,9 @@ const setupBet = async () => {
       const finalGameInformation = await MatchesDatabase.findOne({
         factorId: game.factorId,
       });
-      console.log(`Game found where ${teamToBetOn.teamToWin} will be betted on`);
+      console.log(
+        `Game found where ${teamToBetOn.teamToWin} will be betted on`
+      );
       console.log(finalGameInformation);
       console.log(teamToBetOn);
       finalGameInformation.teamToWin = teamToBetOn.teamToWin;
@@ -298,7 +310,7 @@ const betableGamesWithFullInformation = async () => {
 };
 
 const hasGameEnded = async (finishedFactorggMatches) => {
-  console.log("fired hasGameEnd")
+  console.log("fired hasGameEnd");
   // Check if any game has been placed.
   const gamesWhichArePlaced = await MatchesDatabase.find({
     betPlaced: true,
@@ -389,6 +401,7 @@ module.exports = {
   getFactorGame,
   gamesThatWon,
   gamesThatLose,
+  gamesPlacedBet,
   setupBet,
   betableGamesWithFullInformation,
   hasGameEnded,

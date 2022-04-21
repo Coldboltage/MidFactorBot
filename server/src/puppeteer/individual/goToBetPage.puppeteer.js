@@ -12,6 +12,9 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  // const browser = await puppeteer.launch({
+  //   headless: false
+  // });
   let page = await browser.newPage();
   await page.setViewport({
     width: 640,
@@ -37,7 +40,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
     console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
     console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
-    await page.waitForTimeout(100000)
+    await page.waitForTimeout(1000)
     console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
     console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")
     console.log("ATTEMPT TO BET HAS BEEN PLACED CARE ############################")

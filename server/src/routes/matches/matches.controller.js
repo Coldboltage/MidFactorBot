@@ -1,5 +1,5 @@
 // Grab things from the model
-const {findAllMatches, getMidniteGame, getFactorGame, gamesThatWon, gamesThatLose} = require("../../models/matches.model")
+const {findAllMatches, getMidniteGame, getFactorGame, gamesThatWon, gamesThatLose, gamesPlacedBet} = require("../../models/matches.model")
 
 
 const httpGetAllMatches = async (req, res) => {
@@ -21,6 +21,10 @@ const httpGamesThatLose = async (req, res) => {
   return res.status(200).json(await gamesThatLose(req.params.won))
 }
 
+const httpGamesPlacedBet = async (req, res) => {
+  return res.status(200).json(await gamesPlacedBet())
+}
+
 
 
 
@@ -30,5 +34,6 @@ module.exports = {
   httpGetFactorGame,
   httpGamesThatWon,
   httpGamesThatLose,
+  httpGamesPlacedBet,
 
 }
