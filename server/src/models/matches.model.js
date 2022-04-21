@@ -270,7 +270,7 @@ const setupBet = async () => {
       const finalGameInformation = await MatchesDatabase.findOne({
         factorId: game.factorId,
       });
-      console.log(`Game found where ${teamToBetOn.teamName} will be betted on`);
+      console.log(`Game found where ${teamToBetOn.teamToWin} will be betted on`);
       console.log(finalGameInformation);
       console.log(teamToBetOn);
       finalGameInformation.teamToWin = teamToBetOn.teamToWin;
