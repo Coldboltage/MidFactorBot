@@ -298,6 +298,7 @@ const betableGamesWithFullInformation = async () => {
 };
 
 const hasGameEnded = async (finishedFactorggMatches) => {
+  console.log("fired hasGameEnd")
   // Check if any game has been placed.
   const gamesWhichArePlaced = await MatchesDatabase.find({
     betPlaced: true,

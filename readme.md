@@ -2,7 +2,7 @@ This bot can work for anyone and doesn't take too many steps to operate. A coupl
 
 An .env file with the following. 
 
-- MONGODB_CONNECTION // Probably best to go onto Mongo Atlas for this
+- MONGODB_CONNECTION // Probably best to go onto Mongo Atlas for this.Must be mongoDB as we use mongoose.
 - MIDNITE_EMAIL
 - MIDNITE_PASSWORD
 - PORT
