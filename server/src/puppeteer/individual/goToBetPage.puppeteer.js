@@ -10,14 +10,14 @@ const grabMoney = require("./grabMoney.puppeteer");
 const userAgentAllocation = useragentList()
 
 const goToBetPage = async (listOfGamesToBetOn) => {
-  // const browser = await puppeteer.launch({
-  //   headless: true,
-  //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  // });
-  console.log("goToPage Started");
   const browser = await puppeteer.launch({
-    headless: false
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  console.log("goToPage Started");
+  // const browser = await puppeteer.launch({
+  //   headless: false
+  // });
   let page = await browser.newPage();
   await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
   await page.setCacheEnabled(false);
