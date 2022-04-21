@@ -14,6 +14,8 @@ const placeBet = async () => {
   console.log(`Amount of money available: ${+moneyCheck}`)
 
   // Begin betting process
+  // betPlaced: false, must be false so bets which have already happened, can't be bet on again
+  // betableGamesWithFullInformation confirms this via making sure it grabs games with betPlaced: false
   await goToBetPage(listOfGamesToBetOn)
 }
 
