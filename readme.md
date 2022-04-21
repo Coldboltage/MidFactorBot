@@ -1,25 +1,22 @@
-Simple Readme for myself
+This bot can work for anyone and doesn't take too many steps to operate. A couple of things are needed though.
 
-* Grab both Midnite and Factorgg info. DONE
-* Grab amount of money on Midnite. Cheerio should help with this
-* Learn how to input information. Can't see this being too difficult
-* Save results into a database. Create Schema and model and push onto it
+An .env file with the following. 
 
-From here, I'd have to assumt I can start building out the API routes which I'll use Express for while using NodeJS to learn to Express. 
+- MONGODB_CONNECTION // Probably best to go onto Mongo Atlas for this
+- MIDNITE_EMAIL
+- MIDNITE_PASSWORD
+- PORT
 
-NOTE: Will need to look at the dates of both Midnite and Factorgg. 
-NOTE: Will need to consider the need of a frontend. I will be setting up API's so I will be able to see previous information. This will require CLIENT/SERVER folders
+When the env file is made, all you need to do is install and you're good to go. 
 
-BIG NOTE: index.js will execute the script and it will have cascading affect
+At the root, the following npm scipts are available
 
-17th April: Will create the backend first so then I know what to make for the frontend. 
+- "start-server": "npm start --prefix server" // Command to use when starting up server
+- "install-server": "npm install --prefix server" // Install dependencies
+- "install-start-server": "npm install --prefix server && npm start --prefix server" // Install and run. 
 
-Every game that comes on Factor has an ID. We can add that ID onto each betable game so we don't have to check it again. 
-We can create an assumption that each game found on factor will have a betable game. We don't want to have to go to the work of pairing games together unless we actually have to. 
+This program will use data from factorgg and bet on midnite. It uses the basic Kelly Criterion formula to predict how much of bank roll to bet on. I've set this to half a kelly though going to /server/services/kellyCalculation will allow you to remove the divider by 2. It's up to you.
 
-* Grab games from factor
-* Check database with findOne({factorId: factorIdNumber})
+This program is in alpha and I'm a noob programmer however this will be maintained until furthe notice.
 
-If it exists, nothing else needs done. If it doesn't exist, we should pair that game up with a betable game and then add that to the database. 
-
-21 April: Let's see if I can get this git thing to work correctly.
+Now It's time for a cup of tea. 
