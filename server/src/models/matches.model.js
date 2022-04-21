@@ -298,62 +298,75 @@ const betableGamesWithFullInformation = async () => {
 };
 
 const hasGameEnded = async (finishedFactorggMatches) => {
-  // Check if any game has been placed. 
-  const gamesWhichArePlaced = await MatchesDatabase.find({betPlaced: true, upcoming: true})
-  console.log("Checking if any game has been placed")
+  // Check if any game has been placed.
+  const gamesWhichArePlaced = await MatchesDatabase.find({
+    betPlaced: true,
+    upcoming: true,
+  });
+  console.log("Checking if any game has been placed");
   for await (const game of gamesWhichArePlaced) {
-    console.log(`Checking if game ${game.midniteMatchId} has started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
-    const checkGame = finishedFactorggMatches.find((factorMatchListGame) =>{
+    console.log(
+      `Checking if game ${game.midniteMatchId} has started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`
+    );
+    const checkGame = finishedFactorggMatches.find((factorMatchListGame) => {
       // Check through all games to see if a betPlaced game is on matches array of factorgg.
       if (game.factorId === factorMatchListGame.factorId) {
-        console.log(`Game has started`)
-        return game
+        console.log(`Game has started`);
+        return game;
       } else {
-        console.log(`Game hasn't started`)
+        console.log(`Game hasn't started`);
       }
-    })
+    });
     // If the game isn't on factor matches, it has not started yet.
-    if (!checkGame) continue
-    console.log("Destructre information")
-    // Game found: Get the max games, check score 
-    const {score: {team1Score, team2Score}} = checkGame
+    if (!checkGame) continue;
+    console.log("Destructre information");
+    // Game found: Get the max games, check score
+    const {
+      score: { team1Score, team2Score },
+    } = checkGame;
     // the array is needed because the JSON demands it from factor
-    const seriesMax = checkGame.games[0]
+    const seriesMax = checkGame.games[0];
 
-    console.log(`Game ${game.midniteMatchId} is placed and started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`)
+    console.log(
+      `Game ${game.midniteMatchId} is placed and started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`
+    );
     if (team1Score > team2Score) {
-      if(seriesMax / 2 <= team1Score) {
+      if (seriesMax / 2 <= team1Score) {
         // Team 1 has won the series, the home team
-        const finishedGame = await MatchesDatabase.findOne({_id:game._id})
-        finishedGame.upcoming = false
+        const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
+        finishedGame.upcoming = false;
         // We check if our chosen team, is team1, which is the hometeam
         if (game.teamToWin === game.homeTeam.name) {
-          finishedGame.won = true
-          await finishedGame.save()
+          finishedGame.won = true;
+          await finishedGame.save();
         } else {
-          finishedGame.won = false
-          await finishedGame.save()
+          finishedGame.won = false;
+          await finishedGame.save();
         }
       }
     } else {
-      if(seriesMax / 2 <= team2Score) {
+      if (seriesMax / 2 <= team2Score) {
         // Team 2 has won the series, the away team
-        const finishedGameWinner = await MatchesDatabase.findOne({_id:game._id})
-        finishedGameWinner.upcoming = false
-        // We check if our chosen team, is team1, which is the hometeam
+        const finishedGameWinner = await MatchesDatabase.findOne({
+          _id: game._id,
+        });
+        finishedGameWinner.upcoming = false;
+        // We check if our chosen team, is team2, which is the away team
         if (game.teamToWin === game.awayTeam.name) {
-          finishedGame.won = true
-          await finishedGame.save()
+          finishedGame.won = true;
+          await finishedGame.save();
         } else {
-          finishedGame.won = false
-          await finishedGame.save()
+          finishedGame.won = false;
+          await finishedGame.save();
         }
       }
     }
   }
-  gamesWhichArePlaced.length > 0 ? console.log(`hasGame was used to check games had ended`) : console.log(`No game has been placed`)
-  console.log("hasGameEnded function ended")
-}
+  gamesWhichArePlaced.length > 0
+    ? console.log(`hasGame was used to check games had ended`)
+    : console.log(`No game has been placed`);
+  console.log("hasGameEnded function ended");
+};
 
 const deleteMatch = async (id) => {
   await MatchesDatabase.deleteOne({ _id: id });
@@ -363,7 +376,9 @@ const betPlaced = async (id) => {
   const gameWithBetPlaced = await MatchesDatabase.findOne({ _id: id });
   gameWithBetPlaced.betPlaced = true;
   await gameWithBetPlaced.save();
-  console.log(`Bet should be placed correctly in database for ${gameWithBetPlaced._id}`);
+  console.log(
+    `Bet should be placed correctly in database for ${gameWithBetPlaced._id}`
+  );
 };
 
 module.exports = {
