@@ -1,7 +1,5 @@
 const puppeteer = require("puppeteer");
-const randomUseragent = require('random-useragent');
-
-const userAgent = randomUseragent.getRandom()
+const useragentList = require("../../../services/userAgentList")
 
 // Check both Midnite and FactorGG for games available.
 // NEXT STEP: Check which games exists on both
@@ -10,6 +8,8 @@ const userAgent = randomUseragent.getRandom()
 const login = require("../individual/login.puppeteer");
 const grabMoney = require("../individual/grabMoney.puppeteer");
 const { updateMoney } = require("../../models/money.model");
+
+
 
 const main = async () => {
   const browser = await puppeteer.launch({

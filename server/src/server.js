@@ -26,13 +26,13 @@ const startServer = async () => {
   })
   // Test to see if it will grab games
   // await grabOne()
-  await getMoney()
+  // await getMoney()
   await setupBet()
   await placeBet()
   cron.schedule('*/10 * * * *', async function() {
     console.log('running a task every min');
     await checkMidniteFactorData()
-    await getMoney()
+    // await getMoney()
     await setupBet()
     await placeBet()
   });

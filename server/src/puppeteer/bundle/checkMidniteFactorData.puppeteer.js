@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const rp = require("request-promise");
-const randomUseragent = require('random-useragent');
+const useragentList = require("../../../services/userAgentList")
 
 
 // Check both Midnite and FactorGG for games available. 
@@ -12,9 +12,7 @@ const randomUseragent = require('random-useragent');
 const getJsonData = require("../individual/getJsonData.puppeteer")
 const {matchFactorToMidniteGames, hasGameEnded} = require("../../models/matches.model")
 
-const userAgent = randomUseragent.getRandom()
-
-console.log(userAgent)
+console.log(useragentList())
 
 const main = async () => {
   // const browser = await puppeteer.launch({headless:false})

@@ -1,24 +1,23 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
-const randomUseragent = require("random-useragent");
-
-const userAgent = randomUseragent.getRandom()
-
+const useragentList = require("../../../services/userAgentList")
 const { checkMoney, updateMoney } = require("../../models/money.model");
 const { deleteMatch, betPlaced } = require("../../models/matches.model");
 // Puppeteer modules
 const login = require("../individual/login.puppeteer");
 const grabMoney = require("./grabMoney.puppeteer");
 
+const userAgentAllocation = useragentList()
+
 const goToBetPage = async (listOfGamesToBetOn) => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  console.log("goToPage Started");
   // const browser = await puppeteer.launch({
-  //   headless: false
+  //   headless: true,
+  //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
   // });
+  console.log("goToPage Started");
+  const browser = await puppeteer.launch({
+    headless: false
+  });
   let page = await browser.newPage();
   await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
   await page.setCacheEnabled(false);
@@ -27,6 +26,11 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     height: 800,
   });
   page = await login(page);
+  // setup check money here
+  const moneyAmount = await grabMoney(page);
+  console.log(moneyAmount);
+  await updateMoney(moneyAmount);
+  // money figured out
   if (listOfGamesToBetOn.length < 1) {
     console.log(
       "There's no games here to bet on. This is the goToBetPage module. DONE"
