@@ -242,7 +242,7 @@ const setupBet = async () => {
     // console.log(howLongLeftBeforeGameBegins)
     // Is the game happening in two hours
     console.log(
-      `Is it time for this game to be betted on? ${
+      `Is it time for this game to be betted on? https://www.midnite.com/esports/lol/match/${game.midniteMatchId}/ ${
         howLongLeftBeforeGameBegins < 7200000 ? true : false
       }`
     );
