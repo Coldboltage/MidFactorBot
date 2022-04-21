@@ -22,4 +22,4 @@ We can create an assumption that each game found on factor will have a betable g
 
 If it exists, nothing else needs done. If it doesn't exist, we should pair that game up with a betable game and then add that to the database. 
 
-Working on this
+21 April: Let's see if I can get this git thing to work correctly.
