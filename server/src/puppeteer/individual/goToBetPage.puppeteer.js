@@ -57,7 +57,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
 
     console.log("Validation check");
     console.log(marketCheck);
-    if (marketCheck > 0 || game.prediction < 0.52) {
+    if (marketCheck > 0 || game.prediction <= 0.52) {
       console.log("this game needs to be deleted");
       console.log(game._id);
       await deleteMatch(game._id);
