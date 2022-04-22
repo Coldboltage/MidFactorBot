@@ -15,6 +15,7 @@ const matchesSchema = new mongoose.Schema({
 
   },
   matchStart: {type: String, required: true},
+  matchStartLocale: {type: String},
   factorId: {type: Number, required: true},
   midniteMatchId: {type: Number, required: true},
   upcoming: {type: Boolean, required: true},

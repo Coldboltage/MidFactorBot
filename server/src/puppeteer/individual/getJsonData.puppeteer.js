@@ -2,12 +2,13 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const rp = require("request-promise");
-
+const { extract } = require("tar-stream");
 
 const getJsonData = async (page, name, url, httpRequest, objectName) => {
   // Where the emitter results go into
-  const result = []
-  page.on("request", async (request) => {
+  const result = [];
+  await page.on("request", async (request) => {
+    // console.log("firing page.once request")
     const test = request.url();
     // Use Axios
     if (
@@ -15,10 +16,10 @@ const getJsonData = async (page, name, url, httpRequest, objectName) => {
       !test.includes("static") &&
       httpRequest === "axios"
     ) {
-      // console.log(test);
-      const response = await axios(test);
+      console.log(test);
       console.log(objectName)
-      const  extractData  = response.data.pageProps.data[objectName];
+      const response = await axios(test);
+      const extractData = await response.data.pageProps.data[objectName];
       result.push(extractData);
     }
     // Use Request
@@ -39,11 +40,12 @@ const getJsonData = async (page, name, url, httpRequest, objectName) => {
     }
   });
   await page.goto(url);
+  console.log("opening page");
   // Destructure result array as it's own array so no array inception
-  const [item1, item2] = result
+  const [item1] = result;
   return {
-    item1, item2
-  }
+    item1
+  };
 };
 
-module.exports = getJsonData
+module.exports = getJsonData;

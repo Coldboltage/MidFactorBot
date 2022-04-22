@@ -1,7 +1,8 @@
 const login = async (page) => {
   console.log("entered login puppet");
   await page.setCacheEnabled(false);
-  await page.goto("https://www.midnite.com/login");
+  const response = await page.goto("https://www.midnite.com/login");
+  await page.waitForTimeout(1000)
   console.log("loading loading page");
   await page.waitForSelector("#formulate--login-1");
   await page.focus("#formulate--login-1");
@@ -12,7 +13,7 @@ const login = async (page) => {
   console.log("clicked login");
   // TODO, WAIT FOR THE FUCKING PAGE TO LOAD THEN LEAVE THIS HELL SCAPE.
   console.log("waiting for selector to load");
-  await page.waitForSelector("[component=CountUp]")
+  await page.waitForSelector("[component=CountUp]");
   console.log("loaded");
   return page;
 };

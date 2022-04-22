@@ -46,6 +46,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
 
   if (!midniteData || !factorggData) {
     console.log("Something went wrong");
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     return null;
   }
 
@@ -126,15 +127,16 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           const matchObject = {
             homeTeam: {
               name: midniteGame.home_team,
-              prediction: factorGame.prematchWinProbability.team1Winprob,
+              prediction: +factorGame.prematchWinProbability.team1Winprob,
               odds: +midniteGame.market.contracts[0].price,
             },
             awayTeam: {
               name: midniteGame.away_team,
-              prediction: factorGame.prematchWinProbability.team2Winprob,
+              prediction: +factorGame.prematchWinProbability.team2Winprob,
               odds: +midniteGame.market.contracts[1].price,
             },
             matchStart: midniteGame.start_time,
+            matchStartLocale: midniteGame.start_time.toLocaleString("en-GB"),
             factorId: factorGame.factorId,
             midniteMatchId: midniteGame.id,
             upcoming: true,
@@ -145,7 +147,19 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           // console.log(matchObject);
           matchGames.push(matchObject);
           // Bets will not be less than 52%
-          if (matchObject.homeTeam.prediction <= 52 || matchObject.awayTeam.prediction <= 52) {
+          if (
+            +matchObject.homeTeam.prediction >= 0.52 ||
+            +matchObject.awayTeam.prediction >= 0.52
+          ) {
+            console.log(
+              `Good to go: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
+                matchObject.factorId
+              }`
+            );
+          } else {
+            `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
+              matchObject.factorId
+            }`;
             return
           }
           const findMatch = await MatchesDatabase.findOne({
@@ -258,14 +272,14 @@ const setupBet = async () => {
     console.log(
       `Is it time for this game to be betted on? https://www.midnite.com/esports/lol/match/${
         game.midniteMatchId
-      }/ ${howLongLeftBeforeGameBegins < 3600000 ? true : false}`
+      }/ ${howLongLeftBeforeGameBegins < 4800000 ? true : false}`
     );
     console.log(
-      `Hours before game starts: ${howLongLeftBeforeGameBegins / 3600000}`
+      `Hours before game starts: ${howLongLeftBeforeGameBegins / 4800000}`
     );
     // Determine if the game is ready to be bet on or not
     // If the game passes the test below, timeToBe = true, else it's false.
-    if (howLongLeftBeforeGameBegins < 3600000) {
+    if (howLongLeftBeforeGameBegins < 4800000) {
       databaseGame.timeToBet = true;
       await databaseGame.save();
     }
@@ -302,11 +316,11 @@ const setupBet = async () => {
   } else {
     console.log("No games to setup bets for because of the time :(");
   }
-  console.log("exiting setup bet")
+  console.log("exiting setup bet");
 };
 
 const betableGamesWithFullInformation = async () => {
-  console.log("checking betableGamesWithFullInformaton")
+  console.log("checking betableGamesWithFullInformaton");
   const gamesToBeOnWithData = await MatchesDatabase.find({
     betSetup: true,
     betPlaced: false,
@@ -322,64 +336,40 @@ const hasGameEnded = async (finishedFactorggMatches) => {
     betPlaced: true,
     upcoming: true,
   });
-  console.log("Checking if any game has been placed");
-  for await (const game of gamesWhichArePlaced) {
-    console.log(
-      `Checking if game ${game.midniteMatchId} has started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`
-    );
-    console.log(finishedFactorggMatches);
-    const checkGame = finishedFactorggMatches.find((factorMatchListGame) => {
-      // Check through all games to see if a betPlaced game is on matches array of factorgg.
-      if (game.factorId === factorMatchListGame.factorId) {
-        console.log(`Game has started`);
-        return game;
-      } else {
-        console.log(`Game hasn't started`);
-      }
-    });
-    // If the game isn't on factor matches, it has not started yet.
-    if (!checkGame && factorMatchListGame.matchState === 400) continue;
-    console.log("Destructre information");
-    // Game found: Get the max games, check score
-    const {
-      score: { team1Score, team2Score },
-    } = checkGame;
-    // the array is needed because the JSON demands it from factor
-    console.log(
-      `Game ${game.midniteMatchId} is placed and started. URL https://www.midnite.com/esports/lol/match/${game.midniteMatchId}`
-    );
-    if (team1Score > team2Score) {
-      // Team 1 has won the series, the home team
-      const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
-      finishedGame.upcoming = false;
-      // We check if our chosen team, is team1, which is the hometeam
-      if (game.teamToWin === game.homeTeam.name) {
-        finishedGameWinner.won = true;
-        console.log("Team won")
-        await finishedGameWinner.save();
-      } else {
-        finishedGameWinner.won = false;
-        console.log("Team lost")
-        await finishedGameWinner.save();
-      }
-    } else {
-      // Team 2 has won the series, the away team
-      const finishedGameWinner = await MatchesDatabase.findOne({
-        _id: game._id,
-      });
-      finishedGameWinner.upcoming = false;
-      // We check if our chosen team, is team2, which is the away team
-      if (game.teamToWin === game.awayTeam.name) {
-        finishedGameWinner.won = true;
-        console.log("Team won")
-        await finishedGameWinner.save();
-      } else {
-        finishedGameWinner.won = false;
-        console.log("Team lost")
-        await finishedGameWinner.save();
-      }
-    }
-  }
+  const response = await page.goto(url);
+  const headers = response.headers();
+  console.log(headers);
+  // if (team1Score > team2Score) {
+  //   // Team 1 has won the series, the home team
+  //   const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
+  //   finishedGame.upcoming = false;
+  //   // We check if our chosen team, is team1, which is the hometeam
+  //   if (game.teamToWin === game.homeTeam.name) {
+  //     finishedGameWinner.won = true;
+  //     console.log("Team won")
+  //     await finishedGameWinner.save();
+  //   } else {
+  //     finishedGameWinner.won = false;
+  //     console.log("Team lost")
+  //     await finishedGameWinner.save();
+  //   }
+  // } else {
+  //   // Team 2 has won the series, the away team
+  //   const finishedGameWinner = await MatchesDatabase.findOne({
+  //     _id: game._id,
+  //   });
+  //   finishedGameWinner.upcoming = false;
+  //   // We check if our chosen team, is team2, which is the away team
+  //   if (game.teamToWin === game.awayTeam.name) {
+  //     finishedGameWinner.won = true;
+  //     console.log("Team won")
+  //     await finishedGameWinner.save();
+  //   } else {
+  //     finishedGameWinner.won = false;
+  //     console.log("Team lost")
+  //     await finishedGameWinner.save();
+  //   }
+  // }
   gamesWhichArePlaced.length > 0
     ? console.log(`hasGame was used to check games had ended`)
     : console.log(`No game has been placed`);
