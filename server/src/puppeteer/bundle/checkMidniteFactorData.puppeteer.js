@@ -14,20 +14,21 @@ const rp = require("request-promise");
 
 // Modules needed for bundle
 const getJsonData = require("../individual/getJsonData.puppeteer")
+const betPageJson = require("../individual/checkBetPage.puppeteer")
+const getMoneyAmount = require("../individual/userMoney.puppeteer")
 const {matchFactorToMidniteGames, hasGameEnded} = require("../../models/matches.model")
 
 
 const main = async () => {
-  // const browser = await puppeteer.launch({headless:false})
-  const browser = await puppeteer.launch({ headless: true,
-    args: ['--no-sandbox','--disable-setuid-sandbox'] });
+  const browser = await puppeteer.launch({headless:false})
+  // const browser = await puppeteer.launch({ headless: true,
+  //   args: ['--no-sandbox','--disable-setuid-sandbox'] });
   const page = await browser.newPage();
   // await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
   await page.setCacheEnabled(false);
   // Grab data from both sites. midnite uses request.js while factorgg can use axios. 403 from axios for some reason.
   const {item1:factorggData} = await getJsonData(page, "index", "https://www.factor.gg/", "axios", "upcomingMatches");
   const {item1:midniteData} = await getJsonData(page, "matches", "https://www.midnite.com/esports/lol/", "request");
-  // TIME TO FIND BETS LET'S GO
   // const midniteBetInfo = checkBetPageJson()
   await browser.close();
   // TODO: Import matches.model.js function here. 

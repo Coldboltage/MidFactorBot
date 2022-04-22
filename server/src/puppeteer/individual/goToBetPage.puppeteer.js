@@ -11,7 +11,7 @@ const { checkMoney, updateMoney } = require("../../models/money.model");
 const { deleteMatch, betPlaced } = require("../../models/matches.model");
 // Puppeteer modules
 const login = require("../individual/login.puppeteer");
-const grabMoney = require("./grabMoney.puppeteer");
+const getMoneyAmount = require("./userMoney.puppeteer");
 
 const userAgentAllocation = useragentList()
 
@@ -33,9 +33,11 @@ const goToBetPage = async (listOfGamesToBetOn) => {
   });
   page = await login(page);
   // setup check money here
-  const moneyAmount = await grabMoney(page);
+  const moneyAmount = await getMoneyAmount(page);
   console.log(moneyAmount);
+  await page.waitForTimeout(10000)
   await updateMoney(moneyAmount);
+  await page.waitForTimeout(10000)
   // money figured out
   if (listOfGamesToBetOn.length < 1) {
     console.log(
@@ -164,7 +166,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       await page.waitForTimeout(1000);
 
       // GRAB MONEY
-      const moneyAmount = await grabMoney(page);
+      const moneyAmount = await getMoneyAmount(page);
       console.log(`The amount of money now is: ${moneyAmount}`);
       await updateMoney(moneyAmount);
       console.log(`Money shown on website: ${moneyAmount}`);

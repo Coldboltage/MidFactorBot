@@ -13,7 +13,7 @@ const grabMoney = async (page) => {
   const grabNumber = +$("[component=CountUp]").text().replace("£", "");
 
   console.log(`The amount is ${grabNumber} for cheerio`);
-
+  await page.waitForTimeout(100000)
   return grabNumber;
 };
 
