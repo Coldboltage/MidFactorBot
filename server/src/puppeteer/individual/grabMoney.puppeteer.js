@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 
 const grabMoney = async (page) => {
   console.log("Loading website");
-  await page.goto("https://midnite.com");
+  await page.goto("https://www.midnite.com/esports/bets");
   await page.waitForTimeout(1000);
   console.log("waiting for selector to show");
   await page.waitForSelector("[component=CountUp]")
