@@ -1,4 +1,10 @@
-const puppeteer = require("puppeteer");
+// puppeteer-extra is a drop-in replacement for puppeteer,
+// it augments the installed puppeteer with plugin functionality
+const puppeteer = require('puppeteer-extra')
+
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
 const cheerio = require("cheerio");
 const useragentList = require("../../../services/userAgentList")
 const { checkMoney, updateMoney } = require("../../models/money.model");
@@ -19,7 +25,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
   //   headless: false
   // });
   let page = await browser.newPage();
-  await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
+  // await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
   await page.setCacheEnabled(false);
   await page.setViewport({
     width: 640,

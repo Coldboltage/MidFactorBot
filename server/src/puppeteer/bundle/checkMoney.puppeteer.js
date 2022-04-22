@@ -1,4 +1,10 @@
-const puppeteer = require("puppeteer");
+// puppeteer-extra is a drop-in replacement for puppeteer,
+// it augments the installed puppeteer with plugin functionality
+const puppeteer = require('puppeteer-extra')
+
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
 const useragentList = require("../../../services/userAgentList")
 
 // Check both Midnite and FactorGG for games available.
@@ -19,7 +25,7 @@ const main = async () => {
   // const browser = await puppeteer.launch({headless: false})
   const page = await browser.newPage();
   await page.setCacheEnabled(false);
-  await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
+  // await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
   // Grab data
   console.log("Loading page");
   const loginPage = await login(page);

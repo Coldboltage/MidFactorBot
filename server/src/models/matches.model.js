@@ -144,6 +144,10 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           };
           // console.log(matchObject);
           matchGames.push(matchObject);
+          // Bets will not be less than 52%
+          if (matchObject.homeTeam.prediction <= 52 || matchObject.awayTeam.prediction <= 52) {
+            return
+          }
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
           });
