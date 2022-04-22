@@ -12,7 +12,7 @@ const getMoneyAmount = async (page) => {
   moneyAmount = await page.evaluate(() => {
     const data = JSON.parse(document.querySelector("pre").innerText);
     +data.account.balance + +data.account.bonus;
-    return +data.account.balance + +data.account.bonus;
+    return +data.account.balance
   });
   return moneyAmount;
 

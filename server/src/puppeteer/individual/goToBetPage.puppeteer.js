@@ -6,7 +6,6 @@ const puppeteer = require('puppeteer-extra')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
 const cheerio = require("cheerio");
-const useragentList = require("../../../services/userAgentList")
 const { checkMoney, updateMoney } = require("../../models/money.model");
 const { deleteMatch, betPlaced, hasGameEnded } = require("../../models/matches.model");
 // Puppeteer modules
