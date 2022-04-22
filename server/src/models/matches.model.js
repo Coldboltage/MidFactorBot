@@ -336,9 +336,7 @@ const hasGameEnded = async (finishedFactorggMatches) => {
     betPlaced: true,
     upcoming: true,
   });
-  const response = await page.goto(url);
-  const headers = response.headers();
-  console.log(headers);
+  
   // if (team1Score > team2Score) {
   //   // Team 1 has won the series, the home team
   //   const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
