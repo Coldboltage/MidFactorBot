@@ -8,12 +8,11 @@ puppeteer.use(StealthPlugin())
 const cheerio = require("cheerio");
 const useragentList = require("../../../services/userAgentList")
 const { checkMoney, updateMoney } = require("../../models/money.model");
-const { deleteMatch, betPlaced } = require("../../models/matches.model");
+const { deleteMatch, betPlaced, hasGameEnded } = require("../../models/matches.model");
 // Puppeteer modules
 const login = require("../individual/login.puppeteer");
 const getMoneyAmount = require("./userMoney.puppeteer");
-
-const userAgentAllocation = useragentList()
+const checkBetPage = require("../individual/checkBetPage.puppeteer")
 
 const goToBetPage = async (listOfGamesToBetOn) => {
   const browser = await puppeteer.launch({
@@ -35,10 +34,15 @@ const goToBetPage = async (listOfGamesToBetOn) => {
   // setup check money here
   const moneyAmount = await getMoneyAmount(page);
   console.log(moneyAmount);
-  await page.waitForTimeout(10000)
+  await page.waitForTimeout(1000)
   await updateMoney(moneyAmount);
-  await page.waitForTimeout(10000)
+  await page.waitForTimeout(1000)
   // money figured out
+  // Check games that have been placed
+  // await page.goto("https://www.midnite.com/esports/bets/")
+  // page = await login(page);
+  const gamesWhichHaveEnded = await checkBetPage(page)
+  await hasGameEnded(gamesWhichHaveEnded)
   if (listOfGamesToBetOn.length < 1) {
     console.log(
       "There's no games here to bet on. This is the goToBetPage module. DONE"

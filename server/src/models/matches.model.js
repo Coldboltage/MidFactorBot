@@ -1,5 +1,6 @@
 const MatchesDatabase = require("./matches.mongo");
 const grabGame = require("../../services/kellyCalculation");
+const { finished } = require("combined-stream");
 
 const findAllMatches = async () => {
   return await MatchesDatabase.find({})
@@ -160,7 +161,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
               matchObject.factorId
             }`;
-            return
+            return;
           }
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
@@ -322,6 +323,7 @@ const setupBet = async () => {
 const betableGamesWithFullInformation = async () => {
   console.log("checking betableGamesWithFullInformaton");
   const gamesToBeOnWithData = await MatchesDatabase.find({
+    upcoming: true,
     betSetup: true,
     betPlaced: false,
     timeToBet: true,
@@ -329,13 +331,35 @@ const betableGamesWithFullInformation = async () => {
   return gamesToBeOnWithData;
 };
 
-const hasGameEnded = async (finishedFactorggMatches) => {
+const hasGameEnded = async (finishedGames) => {
   console.log("fired hasGameEnd");
   // Check if any game has been placed.
   const gamesWhichArePlaced = await MatchesDatabase.find({
     betPlaced: true,
     upcoming: true,
   });
+  for await (const placedGame of gamesWhichArePlaced) {
+    for await (const oneFinishedGame of finishedGames) {
+      if (placedGame.midniteMatchId === oneFinishedGame.midniteMatchId) {
+        console.log(
+          `Placed game paired with finished game: Finding out if the bet won. https://www.midnite.com/esports/lol/match/${placedGame.midniteMatchId}`
+        );
+        if (placedGame.teamToWin === oneFinishedGame.winner) {
+          console.log("We got a winner")
+          const finalisedGame = await MatchesDatabase.findOne({midniteMatchId: oneFinishedGame.midniteMatchId})
+          finalisedGame.won = true
+          finalisedGame.upcoming = false
+          await finalisedGame.save()
+        } else {
+          console.log("Our chosen team lost")
+          const finalisedGame = await MatchesDatabase.findOne({midniteMatchId: oneFinishedGame.midniteMatchId})
+          finalisedGame.won = false
+          finalisedGame.upcoming = false
+          await finalisedGame.save()
+        }
+      }
+    }
+  }
   
   // if (team1Score > team2Score) {
   //   // Team 1 has won the series, the home team
