@@ -282,14 +282,14 @@ const setupBet = async () => {
     console.log(
       `Is it time for this game to be betted on? https://www.midnite.com/esports/lol/match/${
         game.midniteMatchId
-      }/ ${howLongLeftBeforeGameBegins < 4800000 ? true : false}`
+      }/ ${howLongLeftBeforeGameBegins < 5400000 ? true : false}`
     );
     console.log(
-      `Hours before game starts: ${howLongLeftBeforeGameBegins / 4800000}`
+      `Hours before game starts: ${howLongLeftBeforeGameBegins / 5400000}`
     );
     // Determine if the game is ready to be bet on or not
     // If the game passes the test below, timeToBe = true, else it's false.
-    if (howLongLeftBeforeGameBegins < 4800000) {
+    if (howLongLeftBeforeGameBegins < 5400000) {
       databaseGame.timeToBet = true;
       await databaseGame.save();
     }
