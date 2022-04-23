@@ -147,10 +147,10 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           };
           // console.log(matchObject);
           matchGames.push(matchObject);
-          // Bets will not be less than 54%
+          // Bets will not be less than 0.535 prediction
           if (
-            +matchObject.homeTeam.prediction >= 0.54 ||
-            +matchObject.awayTeam.prediction >= 0.54
+            +matchObject.homeTeam.prediction >= 0.535 ||
+            +matchObject.awayTeam.prediction >= 0.535
           ) {
             console.log(
               `Good to go: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
