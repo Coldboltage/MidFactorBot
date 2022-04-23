@@ -16,8 +16,7 @@ const checkBetPage = require("../individual/checkBetPage.puppeteer")
 const goToBetPage = async (listOfGamesToBetOn) => {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox,",'--disable-dev-shm-usage',
-    '--single-process'],
+    args: ["--no-sandbox", "--disable-setuid-sandbox,"],
   });
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
@@ -166,13 +165,16 @@ const goToBetPage = async (listOfGamesToBetOn) => {
         "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
       );
       await page.screenshot({path: `${game.midniteMatchId}.png`});
-
       console.log(
         "Confirmation setup, firing call to database to confirm bet has been placed"
       );
       // Game will interact with MatchesDatabase to add betPlaced: true; It'll not come back here as a result
+      await page.waitForTimeout(10000);
+      console.log(`Did we really find the confirmation?`)
+      await page.waitForSelector(
+        "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
+      );
       await betPlaced(game._id);
-      await page.waitForTimeout(2000);
       // GRAB MONEY
       const moneyAmount = await getMoneyAmount(page);
       console.log(`The amount of money now is: ${moneyAmount}`);
@@ -181,7 +183,8 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(`Money shown on database: ${await checkMoney()}`);
       console.log("Money should be added");
       console.log("############ Should loop to another game ################");
-      await page.waitForTimeout(1000);
+      console.log(`Was `)
+      await page.waitForTimeout(10000);
     };
 
     // Logic to figure out which button to press then execute betMacroExecution
