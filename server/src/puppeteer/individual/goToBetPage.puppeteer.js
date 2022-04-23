@@ -153,24 +153,25 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log("YOU ARE ABOUT TO CONFIRM A BET ######################");
       console.log("YOU ARE ABOUT TO CONFIRM A BET ######################");
       console.log("YOU ARE ABOUT TO CONFIRM A BET #####################");
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
       await page.click(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
       );
       console.log("clicked bet button, waiting for confirmation");
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
       // We have clicked the bet button but we don't know if it's went through. We wait for the selector
       // Look for something to confirm a bet has happened
       await page.waitForSelector(
         "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
       );
+      await page.screenshot({path: `${game.midniteMatchId}.png`});
+
       console.log(
         "Confirmation setup, firing call to database to confirm bet has been placed"
       );
       // Game will interact with MatchesDatabase to add betPlaced: true; It'll not come back here as a result
       await betPlaced(game._id);
-      await page.waitForTimeout(1000);
-
+      await page.waitForTimeout(2000);
       // GRAB MONEY
       const moneyAmount = await getMoneyAmount(page);
       console.log(`The amount of money now is: ${moneyAmount}`);
