@@ -1,1 +1,1 @@
-web: npm run deploy-server
+web: npm run heroku-build
