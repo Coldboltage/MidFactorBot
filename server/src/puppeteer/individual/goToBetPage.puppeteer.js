@@ -16,7 +16,8 @@ const checkBetPage = require("../individual/checkBetPage.puppeteer")
 const goToBetPage = async (listOfGamesToBetOn) => {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox,",'--disable-dev-shm-usage',
+    '--single-process'],
   });
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
