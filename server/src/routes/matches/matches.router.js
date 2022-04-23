@@ -8,6 +8,7 @@ const {
   httpGamesThatWon,
   httpGamesThatLose,
   httpGamesPlacedBet,
+  httpGamesUpcoming,
 } = require("./matches.controller");
 
 const matchesRouter = express.Router();
@@ -18,5 +19,7 @@ matchesRouter.get("/factor/:factorId", httpGetFactorGame);
 matchesRouter.get("/won/", httpGamesThatWon);
 matchesRouter.get("/lose/", httpGamesThatLose);
 matchesRouter.get("/betsplaced/", httpGamesPlacedBet);
+matchesRouter.get("/upcoming/", httpGamesUpcoming);
+
 
 module.exports = matchesRouter;

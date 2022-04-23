@@ -35,6 +35,15 @@ const gamesPlacedBet = async () => {
     betSetup: true,
     betPlaced: true,
     timeToBet: true,
+    upcoming: true,
+  })
+    .select("-__v -_id")
+    .sort({ matchStart: 1 });
+};
+
+const gamesUpcoming = async () => {
+  return await MatchesDatabase.find({
+    upcoming: true,
   })
     .select("-__v -_id")
     .sort({ matchStart: 1 });
@@ -345,22 +354,26 @@ const hasGameEnded = async (finishedGames) => {
           `Placed game paired with finished game: Finding out if the bet won. https://www.midnite.com/esports/lol/match/${placedGame.midniteMatchId}`
         );
         if (placedGame.teamToWin === oneFinishedGame.winner) {
-          console.log("We got a winner")
-          const finalisedGame = await MatchesDatabase.findOne({midniteMatchId: oneFinishedGame.midniteMatchId})
-          finalisedGame.won = true
-          finalisedGame.upcoming = false
-          await finalisedGame.save()
+          console.log("We got a winner");
+          const finalisedGame = await MatchesDatabase.findOne({
+            midniteMatchId: oneFinishedGame.midniteMatchId,
+          });
+          finalisedGame.won = true;
+          finalisedGame.upcoming = false;
+          await finalisedGame.save();
         } else {
-          console.log("Our chosen team lost")
-          const finalisedGame = await MatchesDatabase.findOne({midniteMatchId: oneFinishedGame.midniteMatchId})
-          finalisedGame.won = false
-          finalisedGame.upcoming = false
-          await finalisedGame.save()
+          console.log("Our chosen team lost");
+          const finalisedGame = await MatchesDatabase.findOne({
+            midniteMatchId: oneFinishedGame.midniteMatchId,
+          });
+          finalisedGame.won = false;
+          finalisedGame.upcoming = false;
+          await finalisedGame.save();
         }
       }
     }
   }
-  
+
   // if (team1Score > team2Score) {
   //   // Team 1 has won the series, the home team
   //   const finishedGame = await MatchesDatabase.findOne({ _id: game._id });
@@ -419,6 +432,7 @@ module.exports = {
   gamesThatWon,
   gamesThatLose,
   gamesPlacedBet,
+  gamesUpcoming,
   setupBet,
   betableGamesWithFullInformation,
   hasGameEnded,
