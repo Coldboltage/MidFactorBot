@@ -9,10 +9,10 @@ const app = express()
 // Create match router
 app.use("/matches", matchesRouter)
 
-app.use(express.static(path.join(__dirname,  "..","..", "client", "build")));
+app.use(express.static(path.join(__dirname,  "..","..", "client", "out")));
 
 app.get('(/*)', async (req, res, next) => {
-  res.sendFile(path.join(__dirname,  "..","..", "client", "build", 'index.html'));
+  res.sendFile(path.join(__dirname,  "..","..", "client", "out", 'index.html'));
 });
 
 
