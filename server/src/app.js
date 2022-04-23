@@ -1,3 +1,5 @@
+const path = require("path")
+
 const express = require("express")
 // Routers to bring and setup
 const matchesRouter = require("./routes/matches/matches.router")
@@ -5,6 +7,13 @@ const matchesRouter = require("./routes/matches/matches.router")
 const app = express()
 
 // Create match router
-app.use("/", matchesRouter)
+app.use("/matches", matchesRouter)
+
+app.use(express.static(path.join(__dirname,  "..","..", "client", "build")));
+
+app.get('(/*)', async (req, res, next) => {
+  res.sendFile(path.join(__dirname,  "..","..", "client", "build", 'index.html'));
+});
+
 
 module.exports = app

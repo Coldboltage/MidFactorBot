@@ -142,6 +142,7 @@
     "start-server": "npm start --prefix server",
     "install-server": "npm install --prefix server",
     "install-start-server": "npm install --prefix server && npm start --prefix server",
+    "deploy-server": "npm run build --prefix client && npm run start-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

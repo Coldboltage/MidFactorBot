@@ -12,11 +12,11 @@ const {
 
 const matchesRouter = express.Router();
 
-matchesRouter.get("/matches", httpGetAllMatches);
-matchesRouter.get("/matches/midnite/:midniteMatchId", httpGetMidniteGame);
-matchesRouter.get("/matches/factor/:factorId", httpGetFactorGame);
-matchesRouter.get("/matches/won/", httpGamesThatWon);
-matchesRouter.get("/matches/lose/", httpGamesThatLose);
-matchesRouter.get("/matches/betsplaced/", httpGamesPlacedBet);
+matchesRouter.get("/", httpGetAllMatches);
+matchesRouter.get("/midnite/:midniteMatchId", httpGetMidniteGame);
+matchesRouter.get("/factor/:factorId", httpGetFactorGame);
+matchesRouter.get("/won/", httpGamesThatWon);
+matchesRouter.get("/lose/", httpGamesThatLose);
+matchesRouter.get("/betsplaced/", httpGamesPlacedBet);
 
 module.exports = matchesRouter;
