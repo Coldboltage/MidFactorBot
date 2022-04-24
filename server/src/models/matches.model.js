@@ -83,7 +83,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       .replace(" ", "")
       .replace(" ", "");
 
-    const filterMidniteGame = midniteData.forEach(async (midniteGame) => {
+    const filterMidniteGame = midniteData.map(async (midniteGame) => {
+
       const midniteGameHomeTeam = midniteGame.home_team;
       const midniteGameAwayTeam = midniteGame.away_team;
       // formula based name
@@ -118,6 +119,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           factorGameAwayTeamFixed === midniteGameHomeTeamFixed)
       ) {
         console.log("####################################");
+        console.log("top")
         console.log("####################################");
         console.log(
           `FactorGame home team: ${factorGameHomeTeam} and away team: ${factorGameAwayTeam}`
@@ -131,7 +133,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             !midniteGame.market.contracts[0] ||
             midniteGame.market.contracts[0].status === "halted"
           ) {
-            console.log("no price");
+            console.log(`no price for ${`https://www.midnite.com/esports/lol/match/${midniteGame.id}`}`);
             return "no price";
           }
           const matchObject = {
@@ -146,7 +148,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               odds: +midniteGame.market.contracts[1].price,
             },
             matchStart: midniteGame.start_time,
-            matchStartLocale: midniteGame.start_time.toLocaleString("en-GB"),
             factorId: factorGame.factorId,
             midniteMatchId: midniteGame.id,
             upcoming: true,
@@ -154,28 +155,27 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             betSetup: false,
             timeToBet: false,
           };
+          console.log(`matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
           // console.log(matchObject);
-          matchGames.push(matchObject);
           // Bets will not be less than 0.535 prediction
-          if (
-            +matchObject.homeTeam.prediction >= 0.535 ||
-            +matchObject.awayTeam.prediction >= 0.535
-          ) {
-            console.log(
-              `Good to go: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
-                matchObject.factorId
-              }`
-            );
-          } else {
-            `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
-              matchObject.factorId
-            }`;
-            return;
-          }
+          // if (
+          //   matchObject.homeTeam.prediction >= 0.535 ||
+          //   matchObject.awayTeam.prediction >= 0.535
+          // ) {
+          //   console.log(
+          //     `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
+          //   );
+          // } else {
+          //   `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
+          //     matchObject.factorId
+          //   }`;
+          //   return;
+          // }
+          console.log(`Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
           });
-          console.log("calling database");
+          console.log(`calling database`);
           console.log(`Checking match: ${matchObject.factorId}`);
           if (!findMatch) {
             console.log("Couldn't find match ID so saving object to database");
@@ -185,14 +185,15 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             console.log("Match should be added");
           } else if (findMatch) {
             console.log("ID Found, here's the object");
+            console.log("Checking prediction")
             if (
-              findMatch.homeTeam.prediction !==
-                matchObject.homeTeam.prediction ||
-              findMatch.awayTeam.prediction !== matchObject.awayTeam.prediction
+              +findMatch.homeTeam.prediction !==
+                +matchObject.homeTeam.prediction ||
+              +findMatch.awayTeam.prediction !== +matchObject.awayTeam.prediction
             ) {
               console.log("Prediction has changed");
-              findMatch.homeTeam.prediction = +matchObject.homeTeam.prediction;
-              findMatch.awayTeam.prediction = +matchObject.awayTeam.prediction;
+              Number(findMatch.homeTeam.prediction) = Number(matchObject.homeTeam.prediction);
+              Number(findMatch.awayTeam.prediction) = Number(matchObject.awayTeam.prediction);
               await findMatch.save();
               console.log(`Saved changes to prediction for ${findMatch._id}`);
             } else if (
@@ -255,6 +256,7 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       }
     });
   });
+  await new Promise((resolve) => setTimeout(resolve, 50000));
 };
 
 const setupBet = async () => {
@@ -327,6 +329,7 @@ const setupBet = async () => {
     console.log("No games to setup bets for because of the time :(");
   }
   console.log("exiting setup bet");
+  
 };
 
 const betableGamesWithFullInformation = async () => {
