@@ -27,15 +27,24 @@ const getMoneyAmount = require("./userMoney.puppeteer");
 const checkBetPage = require("../individual/checkBetPage.puppeteer");
 
 const goToBetPage = async (listOfGamesToBetOn) => {
-  // const browser = await puppeteer.launch({
-  //   headless: true,
-  //   args: [`--no-sandbox", "--disable-setuid-sandbox, --proxy-server=${conf.vpnServer}`],
-  // });
-  console.log("goToPage Started");
   const browser = await puppeteer.launch({
     headless: false,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      `proxy-server=https://uk1785.nordvpn.com:89`,
+    ],
   });
+  console.log("goToPage Started");
+  // const browser = await puppeteer.launch({
+  //   headless: true,
+  // });
   let page = await browser.newPage();
+
+  // await page.authenticate({
+  //   username: `${process.env.NORDVPN_USERNAME}`,
+  //   password: `${process.env.NORDVPN_PASSWORD}`,
+  // });
 
   // await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
   await page.setCacheEnabled(true);
@@ -103,12 +112,12 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     );
 
     console.log("Validation check");
-    console.log(game)
+    console.log(game);
     console.log(marketCheck.length);
     console.log(`Market check: ${marketCheck.length > 0}`);
     console.log(`Prediction check: ${+game.prediction <= 0.535}`);
     console.log(`Bet placed: ${game.betPlaced === true}`);
-    console.log(typeof game.betPlaced)
+    console.log(typeof game.betPlaced);
     if (
       marketCheck.length > 0 ||
       game.prediction <= 0.535 ||
