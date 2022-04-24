@@ -11,12 +11,11 @@ const betSlipScreenshot = async (game, screenshot) => {
 }
 
 const confirmBet = async (game, screenshot) => {
-  const betSlip = await ScreenshotDatabase.find({midniteMatchId: game.midniteMatchId})
+  const betSlip = await ScreenshotDatabase.findOne({midniteMatchId: game.midniteMatchId})
   betSlip.betPlaced = true
   betSlip.confirmBet = screenshot
   await betSlip.save()
   console.log("Confirmation bet screenshot sent to database")
-
 }
 
 module.exports = {
