@@ -1,17 +1,26 @@
 // puppeteer-extra is a drop-in replacement for puppeteer,
 // it augments the installed puppeteer with plugin functionality
-const puppeteer = require('puppeteer-extra')
+const puppeteer = require("puppeteer-extra");
 
 // add stealth plugin and use defaults (all evasion techniques)
-const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-puppeteer.use(StealthPlugin())
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
 const cheerio = require("cheerio");
+// Money Model
 const { checkMoney, updateMoney } = require("../../models/money.model");
-const { deleteMatch, betPlaced, hasGameEnded } = require("../../models/matches.model");
+// Matches Model
+const {
+  deleteMatch,
+  betPlaced,
+  hasGameEnded,
+} = require("../../models/matches.model");
+// Screenshot Model
+
+const { betSlipScreenshot, confirmBet } = require("../../models/screenshot.model");
 // Puppeteer modules
 const login = require("../individual/login.puppeteer");
 const getMoneyAmount = require("./userMoney.puppeteer");
-const checkBetPage = require("../individual/checkBetPage.puppeteer")
+const checkBetPage = require("../individual/checkBetPage.puppeteer");
 
 const goToBetPage = async (listOfGamesToBetOn) => {
   const browser = await puppeteer.launch({
@@ -33,15 +42,15 @@ const goToBetPage = async (listOfGamesToBetOn) => {
   // setup check money here
   const moneyAmount = await getMoneyAmount(page);
   console.log(moneyAmount);
-  await page.waitForTimeout(1000)
+  await page.waitForTimeout(1000);
   await updateMoney(moneyAmount);
-  await page.waitForTimeout(1000)
+  await page.waitForTimeout(1000);
   // money figured out
   // Check games that have been placed
   // await page.goto("https://www.midnite.com/esports/bets/")
   // page = await login(page);
-  const gamesWhichHaveEnded = await checkBetPage(page)
-  await hasGameEnded(gamesWhichHaveEnded)
+  const gamesWhichHaveEnded = await checkBetPage(page);
+  await hasGameEnded(gamesWhichHaveEnded);
   if (listOfGamesToBetOn.length < 1) {
     console.log(
       "There's no games here to bet on. This is the goToBetPage module. DONE"
@@ -90,10 +99,14 @@ const goToBetPage = async (listOfGamesToBetOn) => {
 
     console.log("Validation check");
     console.log(marketCheck);
-    if (marketCheck === null || game.prediction <= 0.535 || game.betPlaced === true) {
-      console.log(`Market check: ${marketCheck > 0}`)
-      console.log(`Prediction check: ${game.prediction >= 0.535}`)
-      console.log(`Bet placed: ${game.betPlaced === false}`)
+    if (
+      marketCheck === null ||
+      game.prediction <= 0.535 ||
+      game.betPlaced === true
+    ) {
+      console.log(`Market check: ${marketCheck > 0}`);
+      console.log(`Prediction check: ${game.prediction >= 0.535}`);
+      console.log(`Bet placed: ${game.betPlaced === false}`);
       console.log("this game needs to be deleted");
       console.log(game._id);
       await deleteMatch(game._id);
@@ -154,6 +167,16 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log("YOU ARE ABOUT TO CONFIRM A BET ######################");
       console.log("YOU ARE ABOUT TO CONFIRM A BET #####################");
       await page.waitForTimeout(2000);
+      console.log("######### TEST ############");
+      console.log("######### TEST ############");
+      console.log("######### TEST ############");
+      console.log("######### TEST ############");
+      // Create database entry
+      // TODO screenshotcall
+      const betSlipScreenshot = await page.screenshot({ encoding: "base64" });
+      await page.waitForTimeout(1000)
+      await betSlipScreenshot(game, betSlipScreenshot)
+      await page.waitForTimeout("1000")
       await page.click(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
       );
@@ -164,16 +187,21 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       await page.waitForSelector(
         "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
       );
-      await page.screenshot({path: `${game.midniteMatchId}.png`});
+      await page.screenshot({ path: `${game.midniteMatchId}.png` });
       console.log(
         "Confirmation setup, firing call to database to confirm bet has been placed"
       );
       // Game will interact with MatchesDatabase to add betPlaced: true; It'll not come back here as a result
       await page.waitForTimeout(10000);
-      console.log(`Did we really find the confirmation?`)
+      console.log(`Did we really find the confirmation?`);
       await page.waitForSelector(
         "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
       );
+      console.log(
+        "Alan at this point, it should have went through, we need a screenshot"
+      );
+      const betConfirmedScreenshot = await page.screenshot({ encoding: "base64" });
+      await confirmBet(game, betConfirmedScreenshot)
       await betPlaced(game._id);
       // GRAB MONEY
       const moneyAmount = await getMoneyAmount(page);
@@ -182,9 +210,9 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(`Money shown on website: ${moneyAmount}`);
       console.log(`Money shown on database: ${await checkMoney()}`);
       console.log("Money should be added");
+      await page.waitForTimeout(100000);
       console.log("############ Should loop to another game ################");
-      console.log(`Was `)
-      await page.waitForTimeout(10000);
+      console.log(`Was `);
     };
 
     // Logic to figure out which button to press then execute betMacroExecution
