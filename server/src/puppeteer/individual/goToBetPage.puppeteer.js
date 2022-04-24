@@ -16,7 +16,10 @@ const {
 } = require("../../models/matches.model");
 // Screenshot Model
 
-const { betSlipScreenshot, confirmBet } = require("../../models/screenshot.model");
+const {
+  betSlipScreenshot,
+  confirmBet,
+} = require("../../models/screenshot.model");
 // Puppeteer modules
 const login = require("../individual/login.puppeteer");
 const getMoneyAmount = require("./userMoney.puppeteer");
@@ -160,7 +163,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       // await page.click("#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div > div > div > div.ant-input-number-input-wrap > input", {clickCount: 2})
       await page.keyboard.type(`${amountToBet.toFixed(2)}`);
       // LOGIC FOR BETTING ADDED HERE
-      console.log(game._id);
+      console.log(game);
       console.log(`The amount to bet for this game is: ${amountToBet}`);
       // CLICK PLACE BET
       console.log("YOU ARE ABOUT TO CONFIRM A BET ######################");
@@ -173,19 +176,25 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log("######### TEST ############");
       // Create database entry
       // TODO screenshotcall
-      const betSlipScreenshotData = await page.screenshot({ encoding: "base64" });
-      await page.waitForTimeout(1000)
-      await betSlipScreenshot(game, betSlipScreenshotData)
-      await page.waitForTimeout("1000")
-      await page.click(
+      const betSlipScreenshotData = await page.screenshot({
+        encoding: "base64",
+      });
+      await page.waitForTimeout(1000);
+      await betSlipScreenshot(game, betSlipScreenshotData);
+      await page.waitForTimeout("1000");
+      await page.waitForSelector(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
       );
+      await page.click(
+        "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button",
+        { clickCount: 2 }
+      );
       console.log("clicked bet button, waiting for confirmation");
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(4000);
       // We have clicked the bet button but we don't know if it's went through. We wait for the selector
       // Look for something to confirm a bet has happened
       await page.waitForSelector(
-        "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
+        "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > button:nth-child(2)"
       );
       await page.screenshot({ path: `${game.midniteMatchId}.png` });
       console.log(
@@ -195,13 +204,15 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       await page.waitForTimeout(10000);
       console.log(`Did we really find the confirmation?`);
       await page.waitForSelector(
-        "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(1) > div > div > svg > path"
+        "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > button:nth-child(2)"
       );
       console.log(
         "Alan at this point, it should have went through, we need a screenshot"
       );
-      const betConfirmedScreenshotData = await page.screenshot({ encoding: "base64" });
-      await confirmBet(game, betConfirmedScreenshotData)
+      const betConfirmedScreenshotData = await page.screenshot({
+        encoding: "base64",
+      });
+      await confirmBet(game, betConfirmedScreenshotData);
       await betPlaced(game._id);
       // GRAB MONEY
       const moneyAmount = await getMoneyAmount(page);
