@@ -158,19 +158,18 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           console.log(`matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
           // console.log(matchObject);
           // Bets will not be less than 0.535 prediction
-          // if (
-          //   matchObject.homeTeam.prediction >= 0.535 ||
-          //   matchObject.awayTeam.prediction >= 0.535
-          // ) {
-          //   console.log(
-          //     `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
-          //   );
-          // } else {
-          //   `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
-          //     matchObject.factorId
-          //   }`;
-          //   return;
-          // }
+          if (
+            matchObject.homeTeam.prediction >= 0.535 || matchObject.awayTeam.prediction >= 0.535
+          ) {
+            console.log(
+              `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
+            );
+          } else {
+            `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
+              matchObject.factorId
+            }`;
+            return;
+          }
           console.log(`Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
@@ -256,7 +255,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       }
     });
   });
-  await new Promise((resolve) => setTimeout(resolve, 50000));
 };
 
 const setupBet = async () => {
