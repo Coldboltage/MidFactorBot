@@ -173,9 +173,9 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log("######### TEST ############");
       // Create database entry
       // TODO screenshotcall
-      const betSlipScreenshot = await page.screenshot({ encoding: "base64" });
+      const betSlipScreenshotData = await page.screenshot({ encoding: "base64" });
       await page.waitForTimeout(1000)
-      await betSlipScreenshot(game, betSlipScreenshot)
+      await betSlipScreenshot(game, betSlipScreenshotData)
       await page.waitForTimeout("1000")
       await page.click(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
@@ -200,8 +200,8 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(
         "Alan at this point, it should have went through, we need a screenshot"
       );
-      const betConfirmedScreenshot = await page.screenshot({ encoding: "base64" });
-      await confirmBet(game, betConfirmedScreenshot)
+      const betConfirmedScreenshotData = await page.screenshot({ encoding: "base64" });
+      await confirmBet(game, betConfirmedScreenshotData)
       await betPlaced(game._id);
       // GRAB MONEY
       const moneyAmount = await getMoneyAmount(page);
