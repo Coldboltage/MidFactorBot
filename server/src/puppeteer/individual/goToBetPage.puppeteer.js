@@ -221,7 +221,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log(`Money shown on website: ${moneyAmount}`);
       console.log(`Money shown on database: ${await checkMoney()}`);
       console.log("Money should be added");
-      await page.waitForTimeout(100000);
+      await page.waitForTimeout(1000);
       console.log("############ Should loop to another game ################");
       console.log(`Was `);
     };
