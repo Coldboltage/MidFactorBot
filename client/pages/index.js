@@ -1,5 +1,4 @@
 import React from "react";
-import { Button, Icon, Label, Menu, Table } from "semantic-ui-react";
 import * as styles from "../styles/Home.module.css"
 
 const index = ({data}) => {
