@@ -7,9 +7,14 @@ const pluginProxy = require('puppeteer-extra-plugin-proxy');
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 
+// puppeteer.use(pluginProxy({
+//   address: `${process.env.PROXY_IP}`,
+//   port: Number(process.env.PROXY_PORT
+// )}));
+
 puppeteer.use(pluginProxy({
-  address: `${process.env.PROXY_IP}`,
-  port: process.env.PROXY_PORT
+  address: '81.132.40.225',
+  port: 808
 }));
 
 const cheerio = require("cheerio");

@@ -2,7 +2,6 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const rp = require("request-promise");
-const { extract } = require("tar-stream");
 
 const getJsonData = async (page, name, url, httpRequest, objectName) => {
   // Where the emitter results go into
