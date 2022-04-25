@@ -47,7 +47,7 @@ const index = ({data}) => {
 export default index;
 
 export async function getStaticProps(context) {
-  const response = await fetch("localhost:8000/api/matches")
+  const response = await fetch("https://midfactor.herokuapp.com/api/matches")
   const data = await response.json()
   return {
     props: {data}, // will be passed to the page component as props
