@@ -2,12 +2,14 @@ const path = require("path")
 
 const express = require("express")
 // Routers to bring and setup
-const matchesRouter = require("./routes/matches/matches.router")
+// const matchesRouter = require("./routes/matches/matches.router")
+const api = require("./routes/api")
 
 const app = express()
 
 // Create match router
-app.use("/matches", matchesRouter)
+// app.use("/matches", matchesRouter)
+app.use("/api", api)
 
 app.use(express.static(path.join(__dirname,  "..","..", "client", "out")));
 

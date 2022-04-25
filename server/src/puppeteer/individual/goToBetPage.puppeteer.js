@@ -43,10 +43,8 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      `proxy-server=${process.env.PROXY_IP}`,
     ],
   });
-  console.log(process.env.PROXY_IP);
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
   //   headless: true,
