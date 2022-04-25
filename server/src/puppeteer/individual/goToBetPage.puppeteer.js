@@ -13,8 +13,12 @@ puppeteer.use(StealthPlugin());
 // )}));
 
 puppeteer.use(pluginProxy({
-  address: '81.132.40.225',
-  port: 808
+  address: '154.17.91.227',
+  port: 29842,
+  credentials: {
+    username: `${process.env.PROXY_USERNAME}`,
+    password: `${process.env.PROXY_PASSWORD}`
+  }
 }));
 
 const cheerio = require("cheerio");

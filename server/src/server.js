@@ -23,19 +23,19 @@ const startServer = async () => {
   });
   await checkMidniteFactorData();
   // Start backend server
-
   // Test to see if it will grab games
   // await grabOne()
   // await getMoney()
   await setupBet();
   await placeBet();
-  cron.schedule("*/10 * * * *", async function () {
-    console.log("running a task every min");
-    await checkMidniteFactorData();
-    // await getMoney()
-    await setupBet();
-    await placeBet();
-  });
+  
 };
 
 startServer();
+cron.schedule("*/10 * * * *", async function () {
+  console.log("running a task every min");
+  await checkMidniteFactorData();
+  // await getMoney()
+  await setupBet();
+  await placeBet();
+});
