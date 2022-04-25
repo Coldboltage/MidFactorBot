@@ -1,10 +1,16 @@
 // puppeteer-extra is a drop-in replacement for puppeteer,
 // it augments the installed puppeteer with plugin functionality
 const puppeteer = require("puppeteer-extra");
+const pluginProxy = require('puppeteer-extra-plugin-proxy');
 
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
+
+puppeteer.use(pluginProxy({
+  address: '81.132.40.225',
+  port: 808
+}));
 
 const cheerio = require("cheerio");
 // Money Model
@@ -32,14 +38,16 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      `proxy-server=https://uk1785.nordvpn.com:89`,
+      `proxy-server=${process.env.PROXY_IP}`,
     ],
   });
+  console.log(process.env.PROXY_IP);
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
   //   headless: true,
   // });
   let page = await browser.newPage();
+
 
   // await page.authenticate({
   //   username: `${process.env.NORDVPN_USERNAME}`,
@@ -53,6 +61,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     height: 800,
   });
   page = await login(page);
+  // await page.waitForTimeout(1000000)
   // setup check money here
   const moneyAmount = await getMoneyAmount(page);
   console.log(moneyAmount);
@@ -161,6 +170,15 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div > div > div > div.ant-input-number-input-wrap > input";
 
     const betMacroExecution = async () => {
+      // await page.goto("https://www.whatismyip.com/");
+      // await page.waitForTimeout(7000)
+      // const woooo = await page.screenshot({
+      //   encoding: "base64",
+      // });
+      // await betSlipScreenshot(game, woooo);
+      // console.log("SCREENSHOT WOOO");
+      // await page.waitForTimeout(1000000)
+      // ABOVE NEEDS DELETED: SCREENSHOT IP
       await page.waitForTimeout(200);
       try {
         await page.click(bettingSlip);
@@ -189,11 +207,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       console.log("######### TEST ############");
       // Create database entry
       // TODO screenshotcall
-      const betSlipScreenshotData = await page.screenshot({
-        encoding: "base64",
-      });
       await page.waitForTimeout(1000);
-      await page.waitForTimeout("1000");
       await page.waitForSelector(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button"
       );
@@ -201,7 +215,6 @@ const goToBetPage = async (listOfGamesToBetOn) => {
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button",
         { clickCount: 2 }
       );
-      await page.waitForTimeout(100);
       await page.click(
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button",
         { clickCount: 2 }
@@ -211,8 +224,12 @@ const goToBetPage = async (listOfGamesToBetOn) => {
         "#mobileBetslipContainer > aside > div:nth-child(3) > div > div > div:nth-child(3) > div > div > button",
         { clickCount: 2 }
       );
-      await betSlipScreenshot(game, betSlipScreenshotData);
+      await page.waitForTimeout(1000);
 
+      const betSlipScreenshotData = await page.screenshot({
+        encoding: "base64",
+      });
+      await betSlipScreenshot(game, betSlipScreenshotData);
       console.log("clicked bet button, waiting for confirmation");
       await page.waitForTimeout(4000);
       // We have clicked the bet button but we don't know if it's went through. We wait for the selector
@@ -220,7 +237,6 @@ const goToBetPage = async (listOfGamesToBetOn) => {
       await page.waitForSelector(
         "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > button:nth-child(2)"
       );
-      await page.screenshot({ path: `${game.midniteMatchId}.png` });
       console.log(
         "Confirmation setup, firing call to database to confirm bet has been placed"
       );
