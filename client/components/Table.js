@@ -9,9 +9,15 @@ const Table = ({ matches }) => {
     AllMatchesDataHeaders
   );
 
-  // useEffect(() => {
-  //   setTableData(data)
-  // }, [])
+  useEffect(() => {
+    const fetchMyApi = async () => {
+      const response = await fetch("https://midfactor.herokuapp.com/api/matches");
+      const data = await response.json()
+      console.log("Updated")
+      return data
+    }
+    setTableData(fetchMyApi())
+  }, [])
 
   console.log(matches);
 

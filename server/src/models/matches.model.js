@@ -83,7 +83,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
       .replace(" ", "");
 
     const filterMidniteGame = midniteData.map(async (midniteGame) => {
-
       const midniteGameHomeTeam = midniteGame.home_team;
       const midniteGameAwayTeam = midniteGame.away_team;
       // formula based name
@@ -117,9 +116,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
         (factorGameAwayTeamFixed === midniteGameAwayTeamFixed ||
           factorGameAwayTeamFixed === midniteGameHomeTeamFixed)
       ) {
-
         console.log("####################################");
-        console.log("top")
+        console.log("top");
         console.log("####################################");
         console.log(
           `FactorGame home team: ${factorGameHomeTeam} and away team: ${factorGameAwayTeam}`
@@ -133,7 +131,9 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             !midniteGame.market.contracts[0] ||
             midniteGame.market.contracts[0].status === "halted"
           ) {
-            console.log(`no price for ${`https://www.midnite.com/esports/lol/match/${midniteGame.id}`}`);
+            console.log(
+              `no price for ${`https://www.midnite.com/esports/lol/match/${midniteGame.id}`}`
+            );
             return "no price";
           }
           const matchObject = {
@@ -155,11 +155,14 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             betSetup: false,
             timeToBet: false,
           };
-          console.log(`matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
+          console.log(
+            `matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+          );
           // console.log(matchObject);
           // Bets will not be less than 0.535 prediction
           if (
-            matchObject.homeTeam.prediction >= 0.535 || matchObject.awayTeam.prediction >= 0.535
+            matchObject.homeTeam.prediction >= 0.535 ||
+            matchObject.awayTeam.prediction >= 0.535
           ) {
             console.log(
               `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
@@ -170,17 +173,15 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             }`;
             return;
           }
-          console.log(`Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
+          console.log(
+            `Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+          );
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
           });
-          if (findMatch.matchStart)
+          // if (findMatch.matchStart)
           console.log(`calling database`);
           console.log(`Checking match: ${matchObject.factorId}`);
-          if (findMatch.betPlaced === true) {
-            console.log("Bet placed, no need to update")
-            return
-          }
           if (!findMatch) {
             console.log("Couldn't find match ID so saving object to database");
             const match = await MatchesDatabase.create(matchObject);
@@ -189,11 +190,12 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             console.log("Match should be added");
           } else if (findMatch) {
             console.log("ID Found, here's the object");
-            console.log("Checking prediction")
+            console.log("Checking prediction");
             if (
               +findMatch.homeTeam.prediction !==
                 +matchObject.homeTeam.prediction ||
-              +findMatch.awayTeam.prediction !== +matchObject.awayTeam.prediction
+              +findMatch.awayTeam.prediction !==
+                +matchObject.awayTeam.prediction
             ) {
               console.log("Prediction has changed");
               findMatch.homeTeam.prediction = matchObject.homeTeam.prediction;
@@ -209,6 +211,10 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               findMatch.awayTeam.odds = +matchObject.awayTeam.odds;
               await findMatch.save();
               console.log(`Saved changes to odds for ${findMatch._id}`);
+            } else if (findMatch.betPlaced === true) {
+              console.log("Bet placed, no need to update");
+              console.log(findMatch)
+              return;
             }
             console.log(findMatch);
             console.log(`Predictions and Odds verified`);
@@ -247,11 +253,14 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             betSetup: false,
             timeToBet: false,
           };
-          console.log(`matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
+          console.log(
+            `matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+          );
           // console.log(matchObject);
           // Bets will not be less than 0.535 prediction
           if (
-            matchObject.homeTeam.prediction >= 0.535 || matchObject.awayTeam.prediction >= 0.535
+            matchObject.homeTeam.prediction >= 0.535 ||
+            matchObject.awayTeam.prediction >= 0.535
           ) {
             console.log(
               `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
@@ -262,16 +271,14 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             }`;
             return;
           }
-          console.log(`Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`)
+          console.log(
+            `Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+          );
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
           });
           console.log(`calling database`);
           console.log(`Checking match: ${matchObject.factorId}`);
-          if (findMatch.betPlaced === true) {
-            console.log("Bet placed, no need to update")
-            return
-          }
           if (!findMatch) {
             console.log("Couldn't find match ID so saving object to database");
             const match = await MatchesDatabase.create(matchObject);
@@ -279,16 +286,17 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             console.log(matchObject);
             console.log("Match should be added");
           } else if (findMatch) {
-            console.log("ID Found, here's the object");
-            console.log("Checking prediction")
+            console.log(`ID Found, here's the object ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`);
+            console.log("Checking prediction");
             if (
               +findMatch.homeTeam.prediction !==
                 +matchObject.homeTeam.prediction ||
-              +findMatch.awayTeam.prediction !== +matchObject.awayTeam.prediction
+              +findMatch.awayTeam.prediction !==
+                +matchObject.awayTeam.prediction
             ) {
               console.log("Prediction has changed");
-              Number(findMatch.homeTeam.prediction) = Number(matchObject.homeTeam.prediction);
-              Number(findMatch.awayTeam.prediction) = Number(matchObject.awayTeam.prediction);
+              findMatch.homeTeam.prediction = matchObject.homeTeam.prediction;
+              findMatch.awayTeam.prediction = matchObject.awayTeam.prediction;
               await findMatch.save();
               console.log(`Saved changes to prediction for ${findMatch._id}`);
             } else if (
@@ -300,6 +308,10 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               findMatch.awayTeam.odds = +matchObject.awayTeam.odds;
               await findMatch.save();
               console.log(`Saved changes to odds for ${findMatch._id}`);
+            } else if (findMatch.betPlaced === true) {
+              console.log("Bet placed, no need to update");
+              console.log(findMatch)
+              return;
             }
             console.log(findMatch);
             console.log(`Predictions and Odds verified`);
@@ -314,7 +326,9 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           }
         }
       } else {
-        console.log(`Somehow this got here. FactorId ${factorGame.factorId}. Match on midnite not setup yet`)
+        // console.log(
+        //   `Somehow this got here. FactorId ${factorGame.factorId}. Match on midnite not setup yet`
+        // );
       }
     });
   });
@@ -327,70 +341,52 @@ const setupBet = async () => {
     timeToBet: false,
     betPlaced: false,
   });
-  const timeToBetOnGames = betableGames.filter(async (game) => {
-    // Get game from database and determine if we should set it to timeToBet
-    const databaseGame = await MatchesDatabase.findOne({ _id: game._id });
-    console.log(`Checking game time for ${game._id}`);
+  console.log(`${betableGames.length} games to setup for bets`);
+  // Setup games to bet on based on if timeToBetOnGames has games added to it
+  console.log(`Setting up bets`);
+  // Looping through each game to setup bet
+  betableGames.forEach(async (game) => {
+    console.log(`Setup bet for: ${game.factorId}`);
+    // Game from database being checked
+    const teamToBetOn = grabGame(game);
+    // teamToBetOn has populated data to bet on.
+    const finalGameInformation = await MatchesDatabase.findOne({
+      factorId: game.factorId,
+    });
+    console.log(`Game found where ${teamToBetOn.teamToWin} will be betted on`);
+    console.log(finalGameInformation);
+    console.log(teamToBetOn);
+    finalGameInformation.teamToWin = teamToBetOn.teamToWin;
+    finalGameInformation.bankRoll = teamToBetOn.bankRoll;
+    finalGameInformation.odds = teamToBetOn.odds;
+    finalGameInformation.prediction = teamToBetOn.prediction;
+    finalGameInformation.betSetup = true;
     // Find out when the game is
     const gameStartTime = Date.parse(game.matchStart);
     // Get the current time
     const timeRightNow = +Date.now();
     // Difference between both
     const howLongLeftBeforeGameBegins = gameStartTime - timeRightNow;
-    // console.log("Checking time variables")
-    // console.log(gameStartTime)
-    // console.log(timeRightNow)
-    // console.log(howLongLeftBeforeGameBegins)
+    console.log(`Checking game time for ${game._id}`);
     // Is the game happening in two hours
     console.log(
       `Is it time for this game to be betted on? https://www.midnite.com/esports/lol/match/${
         game.midniteMatchId
       }/ ${howLongLeftBeforeGameBegins < 5400000 ? true : false}`
     );
-    console.log(
-      `Hours before game starts: ${howLongLeftBeforeGameBegins / 5400000}`
-    );
     // Determine if the game is ready to be bet on or not
     // If the game passes the test below, timeToBe = true, else it's false.
     if (howLongLeftBeforeGameBegins < 5400000) {
-      databaseGame.timeToBet = true;
-      await databaseGame.save();
-    }
-    return true;
-  });
-  console.log(`${timeToBetOnGames.length} games to setup for bets`);
-  // Setup games to bet on based on if timeToBetOnGames has games added to it
-  if (timeToBetOnGames.length > 0) {
-    console.log(`Setting up bets`);
-    // Looping through each game to setup bet
-    timeToBetOnGames.forEach(async (game) => {
-      console.log(`Setup bet for: ${game.factorId}`);
-      // Game from database being checked
-      const teamToBetOn = grabGame(game);
-      // teamToBetOn has populated data to bet on.
-      const finalGameInformation = await MatchesDatabase.findOne({
-        factorId: game.factorId,
-      });
-      console.log(
-        `Game found where ${teamToBetOn.teamToWin} will be betted on`
-      );
-      console.log(finalGameInformation);
-      console.log(teamToBetOn);
-      finalGameInformation.teamToWin = teamToBetOn.teamToWin;
-      finalGameInformation.bankRoll = teamToBetOn.bankRoll;
-      finalGameInformation.odds = teamToBetOn.odds;
-      finalGameInformation.prediction = teamToBetOn.prediction;
-      finalGameInformation.betSetup = true;
+      finalGameInformation.timeToBet = true;
       await finalGameInformation.save();
-      console.log(
-        "Final Informaton Saved, team predicted to win determined updated"
-      );
-    });
-  } else {
-    console.log("No games to setup bets for because of the time :(");
-  }
+    }
+    await finalGameInformation.save();
+    console.log(
+      "Final Informaton Saved, team predicted to win determined updated"
+    );
+  });
+
   console.log("exiting setup bet");
-  
 };
 
 const betableGamesWithFullInformation = async () => {
