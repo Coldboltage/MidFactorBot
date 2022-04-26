@@ -156,7 +156,7 @@
     "install-start-server": "npm install --prefix server && npm start --prefix server",
     "deploy-server": "npm run build --prefix client & npm run start-server",
     "build-website": "npm run build --prefix client",
-    "client-dev": "npm run dev --prefix client",
+    "dev-client": "npm run dev --prefix client",
     "heroku-build": "npm install --prefix client && npm run deploy-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
