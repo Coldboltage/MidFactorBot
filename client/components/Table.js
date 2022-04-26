@@ -9,17 +9,25 @@ const Table = ({ matches }) => {
     AllMatchesDataHeaders
   );
 
+  console.log("hello there")
+
   useEffect(() => {
     const fetchMyApi = async () => {
-      const response = await fetch("https://midfactor.herokuapp.com/api/matches");
-      const data = await response.json()
-      console.log("Updated")
-      return data
-    }
-    setTableData(fetchMyApi())
-  }, [])
-
-  console.log(matches);
+      try {
+        console.log("fire this!");
+        const response = await fetch(
+          "https://midfactor.herokuapp.com/api/matches"
+        );
+        const data = await response.json();
+        console.log(data);
+        setTableData(data);
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchMyApi();
+  }, []);
 
   return (
     <table className="u-full-width">
@@ -63,7 +71,11 @@ const Table = ({ matches }) => {
               <td className={styles.tableData}>{`${(
                 game.prediction * 100
               ).toFixed(0)}%`}</td>
-              {game.hasOwnProperty("won") ? <td className={styles.tableData}>{`${game.won}`}</td> : <td className={styles.tableData}>{`Awaiting`}</td>}
+              {game.hasOwnProperty("won") ? (
+                <td className={styles.tableData}>{`${game.won}`}</td>
+              ) : (
+                <td className={styles.tableData}>{`Awaiting`}</td>
+              )}
             </tr>
           );
         })}
