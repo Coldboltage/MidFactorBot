@@ -16,8 +16,6 @@ const betPageJson = async (page) => {
   const JSONstuff = $("pre").text();
   const data = JSON.parse(JSONstuff);
 
-  console.log(data);
-
   const single = data.filter((bet) => bet.type === "single");
   const gamesThatHaveBeenSettled = single.filter((game) => {
     console.log("started filter to find settled game");

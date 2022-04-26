@@ -196,8 +196,8 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               +findMatch.awayTeam.prediction !== +matchObject.awayTeam.prediction
             ) {
               console.log("Prediction has changed");
-              Number(findMatch.homeTeam.prediction) = Number(matchObject.homeTeam.prediction);
-              Number(findMatch.awayTeam.prediction) = Number(matchObject.awayTeam.prediction);
+              findMatch.homeTeam.prediction = matchObject.homeTeam.prediction;
+              findMatch.awayTeam.prediction = matchObject.awayTeam.prediction;
               await findMatch.save();
               console.log(`Saved changes to prediction for ${findMatch._id}`);
             } else if (
@@ -394,7 +394,7 @@ const setupBet = async () => {
 };
 
 const betableGamesWithFullInformation = async () => {
-  console.log("checking betableGamesWithFullInformaton");
+  console.log("checking betableGamesWithFullInformation");
   const gamesToBeOnWithData = await MatchesDatabase.find({
     upcoming: true,
     betSetup: true,
