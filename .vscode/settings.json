@@ -1,7 +1,11 @@
 {
   "emmet.preferences": {
-    "emmet.includeLanguages": {
-      "javascript": "javascriptreact"
-   }
-  }
+    
+  },
+  "emmet.syntaxProfiles": {
+  
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+ }
 }

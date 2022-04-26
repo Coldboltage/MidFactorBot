@@ -13,9 +13,12 @@ app.use("/api", api)
 
 app.use(express.static(path.join(__dirname,  "..","..", "client", "out")));
 
-app.get('(/*)', async (req, res, next) => {
+app.get('(/)', async (req, res, next) => {
   res.sendFile(path.join(__dirname,  "..","..", "client", "out", 'index.html'));
 });
 
+app.get('(/dashboard*?)', async (req, res, next) => {
+  res.sendFile(path.join(__dirname,  "..","..", "client", "out", 'dashboard.html'));
+});
 
 module.exports = app

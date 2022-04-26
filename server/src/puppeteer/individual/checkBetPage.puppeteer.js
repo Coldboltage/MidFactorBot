@@ -5,7 +5,7 @@ const betPageJson = async (page) => {
   // await page.setExtraHTTPHeaders({
   //   authorization: `${process.env.BEARER_TOKEN}`,
   // });
-  await page.goto("https://api.midnite.com/v0/bets");
+  await page.goto("https://api.midnite.com/v0/bets?days=7");
   console.log("loading page");
   await page.waitForTimeout(2000);
   await page.content();

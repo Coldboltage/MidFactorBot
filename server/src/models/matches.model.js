@@ -1,11 +1,10 @@
 const MatchesDatabase = require("./matches.mongo");
 const grabGame = require("../../services/kellyCalculation");
-const { finished } = require("combined-stream");
 
 const findAllMatches = async () => {
   return await MatchesDatabase.find({})
     .select("-__v -_id")
-    .sort({ matchStart: 1 });
+    .sort({ matchStart: -1 });
 };
 
 const getMidniteGame = async (id) => {
@@ -175,8 +174,13 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           const findMatch = await MatchesDatabase.findOne({
             factorId: matchObject.factorId,
           });
+          if (findMatch.matchStart)
           console.log(`calling database`);
           console.log(`Checking match: ${matchObject.factorId}`);
+          if (findMatch.betPlaced === true) {
+            console.log("Bet placed, no need to update")
+            return
+          }
           if (!findMatch) {
             console.log("Couldn't find match ID so saving object to database");
             const match = await MatchesDatabase.create(matchObject);
@@ -264,6 +268,10 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           });
           console.log(`calling database`);
           console.log(`Checking match: ${matchObject.factorId}`);
+          if (findMatch.betPlaced === true) {
+            console.log("Bet placed, no need to update")
+            return
+          }
           if (!findMatch) {
             console.log("Couldn't find match ID so saving object to database");
             const match = await MatchesDatabase.create(matchObject);
