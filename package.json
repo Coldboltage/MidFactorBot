@@ -39,6 +39,7 @@
     "css-select": "^4.3.0",
     "css-what": "^6.1.0",
     "dashdash": "^1.14.1",
+    "dayjs": "^1.11.1",
     "debug": "^4.3.4",
     "delayed-stream": "^1.0.0",
     "devtools-protocol": "^0.0.969999",
