@@ -19,7 +19,7 @@ const betPageJson = async (page) => {
   const single = data.filter((bet) => bet.type === "single");
   const gamesThatHaveBeenSettled = single.filter((game) => {
     console.log("started filter to find settled game");
-    console.log(game.bet_legs[0]);
+    // console.log(game.bet_legs[0]);
     const { match_status } = game.bet_legs[0];
     if (match_status === "settled") {
       console.log("A game was settled");

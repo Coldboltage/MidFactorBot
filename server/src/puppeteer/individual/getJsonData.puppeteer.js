@@ -38,6 +38,7 @@ const getJsonData = async (page, name, url, httpRequest, objectName) => {
       }
     }
   });
+  await page.waitForTimeout(1000)
   await page.goto(url);
   console.log("opening page");
   // Destructure result array as it's own array so no array inception
