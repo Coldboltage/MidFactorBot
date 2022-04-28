@@ -191,7 +191,11 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           } else if (findMatch) {
             console.log("ID Found, here's the object");
             console.log("Checking prediction");
-            if (
+            if (findMatch.betPlaced === true) {
+              console.log("Bet placed, no need to update");
+              console.log(findMatch);
+              return;
+            } else if (
               +findMatch.homeTeam.prediction !==
                 +matchObject.homeTeam.prediction ||
               +findMatch.awayTeam.prediction !==
@@ -211,10 +215,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               findMatch.awayTeam.odds = +matchObject.awayTeam.odds;
               await findMatch.save();
               console.log(`Saved changes to odds for ${findMatch._id}`);
-            } else if (findMatch.betPlaced === true) {
-              console.log("Bet placed, no need to update");
-              console.log(findMatch)
-              return;
             }
             console.log(findMatch);
             console.log(`Predictions and Odds verified`);
@@ -286,9 +286,15 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
             console.log(matchObject);
             console.log("Match should be added");
           } else if (findMatch) {
-            console.log(`ID Found, here's the object ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`);
+            console.log(
+              `ID Found, here's the object ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+            );
             console.log("Checking prediction");
-            if (
+            if (findMatch.betPlaced === true) {
+              console.log("Bet placed, no need to update");
+              console.log(findMatch);
+              return;
+            } else if (
               +findMatch.homeTeam.prediction !==
                 +matchObject.homeTeam.prediction ||
               +findMatch.awayTeam.prediction !==
@@ -308,10 +314,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
               findMatch.awayTeam.odds = +matchObject.awayTeam.odds;
               await findMatch.save();
               console.log(`Saved changes to odds for ${findMatch._id}`);
-            } else if (findMatch.betPlaced === true) {
-              console.log("Bet placed, no need to update");
-              console.log(findMatch)
-              return;
             }
             console.log(findMatch);
             console.log(`Predictions and Odds verified`);
