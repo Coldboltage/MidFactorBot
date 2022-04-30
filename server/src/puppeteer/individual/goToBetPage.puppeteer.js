@@ -6,16 +6,16 @@ const pluginProxy = require("puppeteer-extra-plugin-proxy");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 
-puppeteer.use(
-  pluginProxy({
-    address: "proxy.iproyal.com",
-    port: 12323,
-    credentials: {
-      username: `${process.env.PROXY_USERNAME}`,
-      password: `${process.env.PROXY_PASSWORD}`,
-    },
-  })
-);
+// puppeteer.use(
+//   pluginProxy({
+//     address: "proxy.iproyal.com",
+//     port: 12323,
+//     credentials: {
+//       username: `${process.env.PROXY_USERNAME}`,
+//       password: `${process.env.PROXY_PASSWORD}`,
+//     },
+//   })
+// );
 
 const cheerio = require("cheerio");
 // Money Model
@@ -39,12 +39,12 @@ const checkBetPage = require("../individual/checkBetPage.puppeteer");
 
 const goToBetPage = async (listOfGamesToBetOn) => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
-  //   headless: true,
+  //   headless: false,
   // });
   let page = await browser.newPage();
   await page.setRequestInterception(true);
@@ -67,19 +67,22 @@ const goToBetPage = async (listOfGamesToBetOn) => {
     width: 640,
     height: 800,
   });
+  // Make new page do shite
   page = await login(page);
   // await page.waitForTimeout(1000000)
   // setup check money here
-  const moneyAmount = await getMoneyAmount(page);
+  const processJSONPages = await browser.newPage()
+  const moneyAmount = await getMoneyAmount(processJSONPages);
   console.log(moneyAmount);
-  await page.waitForTimeout(1000);
+  await processJSONPages.waitForTimeout(1000);
   await updateMoney(moneyAmount);
-  await page.waitForTimeout(1000);
+  await processJSONPages.waitForTimeout(1000);
   // money figured out
   // Check games that have been placed
   // await page.goto("https://www.midnite.com/esports/bets/")
   // page = await login(page);
-  const gamesWhichHaveEnded = await checkBetPage(page);
+  const gamesWhichHaveEnded = await checkBetPage(processJSONPages);
+  await processJSONPages.close()
   await hasGameEnded(gamesWhichHaveEnded);
   if (listOfGamesToBetOn.length < 1) {
     console.log(
