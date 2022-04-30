@@ -47,6 +47,7 @@ const goToBetPage = async (listOfGamesToBetOn) => {
   //   headless: false,
   // });
   let page = await browser.newPage();
+  await page.setRequestInterception(true);
 
   page.on("request", (req) => {
     if (req.resourceType() === "image") {

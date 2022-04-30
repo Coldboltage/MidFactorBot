@@ -30,7 +30,7 @@ const startServer = async () => {
 
 startServer();
 
-cron.schedule("*/10 * * * *", async function () {
+cron.schedule("*/20 * * * *", async function () {
   console.log("running a task every min");
   await checkMidniteFactorData();
   // await getMoney()
