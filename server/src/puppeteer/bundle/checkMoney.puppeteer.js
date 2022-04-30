@@ -18,10 +18,10 @@ const { updateMoney } = require("../../models/money.model");
 
 const main = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
-  // const browser = await puppeteer.launch({headless: false})
+  // const browser = await puppeteer.launch({headless: true})
   const page = await browser.newPage();
   await page.setCacheEnabled(true);
   // await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36");
