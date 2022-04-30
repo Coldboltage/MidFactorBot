@@ -3,6 +3,24 @@ const app = require("./app");
 const cron = require("node-cron");
 require("dotenv").config();
 
+// puppeteer-extra is a drop-in replacement for puppeteer,
+// it augments the installed puppeteer with plugin functionality
+const puppeteer = require("puppeteer-extra");
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
+
+// puppeteer.use(
+//   pluginProxy({
+//     address: "proxy.iproyal.com",
+//     port: 12323,
+//     credentials: {
+//       username: `${process.env.PROXY_USERNAME}`,
+//       password: `${process.env.PROXY_PASSWORD}`,
+//     },
+//   })
+// );
+
 // Modules when server starts
 const { mongoConnect } = require("../services/mongo");
 const { setupBet } = require("./models/matches.model");
@@ -13,27 +31,29 @@ const placeBet = require("./puppeteer/bundle/placeBet.puppeteer");
 const server = http.createServer(app);
 
 const startServer = async () => {
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+
+  let page = await browser.newPage();
+
   // Establish connection to MongoDB
   await mongoConnect();
   // Grab whatever games we need to get
   server.listen(process.env.PORT || 3000, () => {
     console.log(`Listening on port ${process.env.PORT}`);
   });
-  await checkMidniteFactorData();
-  // Start backend server
-  // Test to see if it will grab games
-  // await grabOne()
-  // await getMoney()
+  await checkMidniteFactorData(page);
   await setupBet();
-  await placeBet();
+  await placeBet(page, browser);
 };
 
 startServer();
 
 cron.schedule("*/20 * * * *", async function () {
   console.log("running a task every min");
-  await checkMidniteFactorData();
-  // await getMoney()
+  await checkMidniteFactorData(page);
   await setupBet();
-  await placeBet();
+  await placeBet(page, browser);
 });

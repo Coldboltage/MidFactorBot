@@ -1,10 +1,3 @@
-// puppeteer-extra is a drop-in replacement for puppeteer,
-// it augments the installed puppeteer with plugin functionality
-const puppeteer = require("puppeteer-extra");
-// add stealth plugin and use defaults (all evasion techniques)
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-puppeteer.use(StealthPlugin());
-
 // Check both Midnite and FactorGG for games available.
 // NEXT STEP: Check which games exists on both
 
@@ -12,13 +5,9 @@ puppeteer.use(StealthPlugin());
 const getJsonData = require("../individual/getJsonData.puppeteer");
 const { matchFactorToMidniteGames } = require("../../models/matches.model");
 
-const main = async () => {
+const main = async (page) => {
   // const browser = await puppeteer.launch({headless:false})
-  const browser = await puppeteer.launch({
-    headless: false,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
+  
   await page.setRequestInterception(true);
 
   page.on("request", (req) => {
@@ -57,7 +46,6 @@ const main = async () => {
     "networkidle2"
   );
   // const midniteBetInfo = checkBetPageJson()
-  await browser.close();
   // TODO: Import matches.model.js function here.
   // It should check the data from both factor and midnite and then pair up the games where possible.
   await matchFactorToMidniteGames(factorggData, midniteData);

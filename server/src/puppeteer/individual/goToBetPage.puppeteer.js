@@ -1,22 +1,3 @@
-// puppeteer-extra is a drop-in replacement for puppeteer,
-// it augments the installed puppeteer with plugin functionality
-const puppeteer = require("puppeteer-extra");
-const pluginProxy = require("puppeteer-extra-plugin-proxy");
-// add stealth plugin and use defaults (all evasion techniques)
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-puppeteer.use(StealthPlugin());
-
-// puppeteer.use(
-//   pluginProxy({
-//     address: "proxy.iproyal.com",
-//     port: 12323,
-//     credentials: {
-//       username: `${process.env.PROXY_USERNAME}`,
-//       password: `${process.env.PROXY_PASSWORD}`,
-//     },
-//   })
-// );
-
 const cheerio = require("cheerio");
 // Money Model
 const { checkMoney, updateMoney } = require("../../models/money.model");
@@ -37,25 +18,21 @@ const login = require("../individual/login.puppeteer");
 const getMoneyAmount = require("./userMoney.puppeteer");
 const checkBetPage = require("../individual/checkBetPage.puppeteer");
 
-const goToBetPage = async (listOfGamesToBetOn) => {
-  const browser = await puppeteer.launch({
-    headless: false,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
   //   headless: false,
   // });
-  let page = await browser.newPage();
+  
   await page.setRequestInterception(true);
 
-  page.on("request", (req) => {
-    if (req.resourceType() === "image") {
-      req.abort();
-    } else {
-      req.continue();
-    }
-  });
+  // page.on("request", (req) => {
+  //   if (req.resourceType() === "image") {
+  //     req.abort();
+  //   } else {
+  //     req.continue();
+  //   }
+  // });
   // await page.authenticate({
   //   username: `${process.env.NORDVPN_USERNAME}`,
   //   password: `${process.env.NORDVPN_PASSWORD}`,

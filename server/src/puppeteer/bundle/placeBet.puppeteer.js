@@ -4,7 +4,7 @@ const {checkMoney} = require("../../models/money.model")
 // Puppeteer Modules
 const goToBetPage = require("../individual/goToBetPage.puppeteer")
 
-const placeBet = async () => {
+const placeBet = async (page, browser) => {
   const listOfGamesToBetOn = await betableGamesWithFullInformation()
   console.log(listOfGamesToBetOn)
   console.log("Preparing to place bet. Checking Data")
@@ -16,7 +16,7 @@ const placeBet = async () => {
   // Begin betting process
   // betPlaced: false, must be false so bets which have already happened, can't be bet on again
   // betableGamesWithFullInformation confirms this via making sure it grabs games with betPlaced: false
-  await goToBetPage(listOfGamesToBetOn)
+  await goToBetPage(listOfGamesToBetOn, page, browser)
 }
 
 module.exports = placeBet
