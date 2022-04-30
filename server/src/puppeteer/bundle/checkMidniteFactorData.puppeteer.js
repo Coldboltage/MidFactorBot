@@ -34,7 +34,7 @@ const main = async () => {
     "https://www.factor.gg/",
     "axios",
     "upcomingMatches",
-    "domcontentloaded",
+    "load",
   );
   const { item1: midniteData } = await getJsonData(
     page,
