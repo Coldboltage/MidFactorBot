@@ -5,7 +5,6 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 
-
 // Check both Midnite and FactorGG for games available.
 // NEXT STEP: Check which games exists on both
 
@@ -16,10 +15,19 @@ const { matchFactorToMidniteGames } = require("../../models/matches.model");
 const main = async () => {
   // const browser = await puppeteer.launch({headless:false})
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+
+  page.on("request", (req) => {
+    if (req.resourceType() === "image") {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
 
   // await page.authenticate({
   //   username: `${process.env.NORDVPN_USERNAME}`,
@@ -34,7 +42,7 @@ const main = async () => {
     "https://www.factor.gg/",
     "axios",
     "upcomingMatches",
-    "domcontentloaded",
+    "domcontentloaded"
   );
   const { item1: midniteData } = await getJsonData(
     page,
@@ -42,7 +50,7 @@ const main = async () => {
     "https://www.midnite.com/esports/lol/",
     "request",
     "test",
-    "networkidle0"
+    "networkidle2"
   );
   // const midniteBetInfo = checkBetPageJson()
   await browser.close();

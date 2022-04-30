@@ -37,6 +37,7 @@ const getJsonData = async (page, name, url, httpRequest, objectName = "test", wa
       }
     }
   });
+  
   await page.goto(url, { waitUntil: waitUntilVariable, timeout: 0}, );
   await page.waitForTimeout(1000)
   console.log("opening page");
