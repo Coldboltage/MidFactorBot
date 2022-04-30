@@ -4,20 +4,7 @@ const puppeteer = require("puppeteer-extra");
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
-const pluginProxy = require('puppeteer-extra-plugin-proxy');
-const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 
-
-puppeteer.use(pluginProxy({
-  address: '154.17.91.227',
-  port: 29842,
-  credentials: {
-    username: `${process.env.PROXY_USERNAME}`,
-    password: `${process.env.PROXY_PASSWORD}`
-  }
-}));
-
-puppeteer.use(AdblockerPlugin())
 
 // Check both Midnite and FactorGG for games available.
 // NEXT STEP: Check which games exists on both

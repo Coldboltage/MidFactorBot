@@ -2,11 +2,9 @@
 // it augments the installed puppeteer with plugin functionality
 const puppeteer = require("puppeteer-extra");
 const pluginProxy = require('puppeteer-extra-plugin-proxy');
-
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
-
 // puppeteer.use(pluginProxy({
 //   address: `${process.env.PROXY_IP}`,
 //   port: Number(process.env.PROXY_PORT
