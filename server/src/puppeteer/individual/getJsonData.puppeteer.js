@@ -1,9 +1,7 @@
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
 const axios = require("axios");
 const rp = require("request-promise");
 
-const getJsonData = async (page, name, url, httpRequest, objectName) => {
+const getJsonData = async (page, name, url, httpRequest, objectName = "test", waitUntilVariable) => {
   // Where the emitter results go into
   const result = [];
   await page.on("request", async (request) => {
@@ -33,13 +31,14 @@ const getJsonData = async (page, name, url, httpRequest, objectName) => {
         const data = JSON.parse(response);
         // console.log(data.data)
         result.push(data.data);
+        return
       } catch (error) {
         console.log(error);
       }
     }
   });
+  await page.goto(url, { waitUntil: waitUntilVariable, timeout: 0}, );
   await page.waitForTimeout(1000)
-  await page.goto(url);
   console.log("opening page");
   // Destructure result array as it's own array so no array inception
   const [item1] = result;

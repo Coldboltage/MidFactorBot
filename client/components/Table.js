@@ -66,7 +66,9 @@ const Table = ({ matches }) => {
               <td className={styles.tableData}>{`${game.betSetup}`}</td>
               <td className={styles.tableData}>{`${game.betPlaced}`}</td>
               <td className={styles.tableData}>{`${game.teamToWin}`}</td>
-              <td className={styles.tableData}>{game.bankRoll}</td>
+              <td className={styles.tableData}>{`${(
+                game.bankRoll * 100
+              ).toFixed(0)}%`}</td>
               <td className={styles.tableData}>{game.odds}</td>
               <td className={styles.tableData}>{`${(
                 game.prediction * 100

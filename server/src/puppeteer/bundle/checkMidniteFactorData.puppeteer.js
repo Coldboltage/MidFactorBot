@@ -5,9 +5,20 @@ const nordConfig = require("../../../services/nordvpn");
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
-const cheerio = require("cheerio");
-const axios = require("axios");
-const rp = require("request-promise");
+const pluginProxy = require('puppeteer-extra-plugin-proxy');
+const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
+
+
+puppeteer.use(pluginProxy({
+  address: '154.17.91.227',
+  port: 29842,
+  credentials: {
+    username: `${process.env.PROXY_USERNAME}`,
+    password: `${process.env.PROXY_PASSWORD}`
+  }
+}));
+
+puppeteer.use(AdblockerPlugin())
 
 // Check both Midnite and FactorGG for games available.
 // NEXT STEP: Check which games exists on both
@@ -19,7 +30,7 @@ const { matchFactorToMidniteGames } = require("../../models/matches.model");
 const main = async () => {
   // const browser = await puppeteer.launch({headless:false})
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -36,13 +47,16 @@ const main = async () => {
     "index",
     "https://www.factor.gg/",
     "axios",
-    "upcomingMatches"
+    "upcomingMatches",
+    "domcontentloaded",
   );
   const { item1: midniteData } = await getJsonData(
     page,
     "matches",
     "https://www.midnite.com/esports/lol/",
-    "request"
+    "request",
+    "test",
+    "networkidle0"
   );
   // const midniteBetInfo = checkBetPageJson()
   await browser.close();
