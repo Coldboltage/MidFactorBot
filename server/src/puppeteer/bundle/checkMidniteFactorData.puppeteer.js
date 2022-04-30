@@ -50,7 +50,7 @@ const main = async () => {
     "https://www.midnite.com/esports/lol/",
     "request",
     "test",
-    "networkidle0"
+    "networkidle2"
   );
   // const midniteBetInfo = checkBetPageJson()
   await browser.close();

@@ -37,10 +37,10 @@ const getJsonData = async (page, name, url, httpRequest, objectName = "test", wa
       }
     }
   });
-  
-  await page.goto(url, { waitUntil: waitUntilVariable, timeout: 0}, );
-  await page.waitForTimeout(1000)
+
   console.log("opening page");
+  await page.waitForTimeout(1000)
+  await page.goto(url, { waitUntil: waitUntilVariable, timeout: 0}, );
   // Destructure result array as it's own array so no array inception
   const [item1] = result;
   return {
