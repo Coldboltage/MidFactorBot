@@ -5,7 +5,6 @@ const puppeteer = require('puppeteer-extra')
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
-const useragentList = require("../../../services/userAgentList")
 
 // Check both Midnite and FactorGG for games available.
 // NEXT STEP: Check which games exists on both

@@ -1,4 +1,3 @@
-const MatchesDatabase = require("../src/models/matches.mongo");
 const kelly = require("kelly");
 
 // The actual formula for Kelly Staking is below:
