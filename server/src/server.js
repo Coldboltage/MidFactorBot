@@ -8,6 +8,8 @@ require("dotenv").config();
 const puppeteer = require("puppeteer-extra");
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const pluginProxy = require('puppeteer-extra-plugin-proxy');
+
 puppeteer.use(StealthPlugin());
 
 puppeteer.use(
@@ -37,7 +39,6 @@ const startServer = async () => {
   });
 
   let page = await browser.newPage();
-  await page.waitForTimeout(3000)
   // Establish connection to MongoDB
   await mongoConnect();
   // Grab whatever games we need to get
@@ -59,7 +60,6 @@ cron.schedule("*/30 * * * *", async function () {
   });
 
   let page = await browser.newPage();
-  await page.waitForTimeout(3000)
   await checkMidniteFactorData(page);
   await setupBet();
   await placeBet(page, browser);
