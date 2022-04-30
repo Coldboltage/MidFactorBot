@@ -250,7 +250,6 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       console.log("Money should be added");
       await page.waitForTimeout(1000);
       console.log("############ Should loop to another game ################");
-      console.log(`Was `);
     };
 
     // Logic to figure out which button to press then execute betMacroExecution
