@@ -1,7 +1,9 @@
 const login = async (page) => {
   console.log("entered login puppet");
   await page.setCacheEnabled(true);
-  const response = await page.goto("https://www.midnite.com/login");
+  const response = await page.goto("https://www.midnite.com/login", {
+    timeout: 0, waitUntil: "networkidle0"
+  });
   await page.waitForTimeout(1000)
   console.log("loading loading page");
   await page.waitForSelector("#formulate--login-1");
