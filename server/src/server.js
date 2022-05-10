@@ -12,16 +12,16 @@ const pluginProxy = require('puppeteer-extra-plugin-proxy');
 
 puppeteer.use(StealthPlugin());
 
-puppeteer.use(
-  pluginProxy({
-    address: "proxy.iproyal.com",
-    port: 12323,
-    credentials: {
-      username: `${process.env.PROXY_USERNAME}`,
-      password: `${process.env.PROXY_PASSWORD}`,
-    },
-  })
-);
+// puppeteer.use(
+//   pluginProxy({
+//     address: "proxy.iproyal.com",
+//     port: 12323,
+//     credentials: {
+//       username: `${process.env.PROXY_USERNAME}`,
+//       password: `${process.env.PROXY_PASSWORD}`,
+//     },
+//   })
+// );
 
 // Modules when server starts
 const { mongoConnect } = require("../services/mongo");
