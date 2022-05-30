@@ -20,7 +20,7 @@ const grabGame = (game) => {
     return {
       teamToWin: object.homeTeam.name,
       // Half a Kelly instead of a full Kellly
-      bankRoll: +bankRoll.toFixed(2) / 4,
+      bankRoll: +bankRoll.toFixed(2) / 2,
       odds: +object.homeTeam.odds,
       prediction: +object.homeTeam.prediction
 
@@ -31,7 +31,7 @@ const grabGame = (game) => {
     const bankRoll = kelly(+object.awayTeam.odds, object.awayTeam.prediction.toFixed(2))
     return {
       teamToWin: object.awayTeam.name,
-      bankRoll: +bankRoll.toFixed(2) / 4,
+      bankRoll: +bankRoll.toFixed(2) / 2,
       odds: +object.awayTeam.odds,
       prediction: +object.awayTeam.prediction
     }

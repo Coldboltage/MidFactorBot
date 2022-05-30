@@ -1,4 +1,6 @@
 const cheerio = require("cheerio");
+const clipboardy = require('node-clipboardy');
+
 // Money Model
 const { checkMoney, updateMoney } = require("../../models/money.model");
 // Matches Model
@@ -23,7 +25,7 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
   // const browser = await puppeteer.launch({
   //   headless: true,
   // });
-  
+
   await page.setRequestInterception(true);
 
   // page.on("request", (req) => {
@@ -48,7 +50,7 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
   page = await login(page);
   // await page.waitForTimeout(1000000)
   // setup check money here
-  const processJSONPages = await browser.newPage()
+  const processJSONPages = await browser.newPage();
   const moneyAmount = await getMoneyAmount(processJSONPages);
   console.log(moneyAmount);
   await processJSONPages.waitForTimeout(1000);
@@ -59,7 +61,7 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
   // await page.goto("https://www.midnite.com/esports/bets/")
   // page = await login(page);
   const gamesWhichHaveEnded = await checkBetPage(processJSONPages);
-  await processJSONPages.close()
+  await processJSONPages.close();
   await hasGameEnded(gamesWhichHaveEnded);
   if (listOfGamesToBetOn.length < 1) {
     console.log(
@@ -153,9 +155,7 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
     const bettingSlip =
       "#__layout > div > div.bottom-0 > div > div:nth-child(1)";
     // We double click this so to allow us to add in a money input
-    const bettingPutNumber =
-      "#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div > div > div > div.ant-input-number-input-wrap > input";
-
+    const bettingPutNumber = `#formulate--esports-lol-match-${game.midniteMatchId}-1`;
     const betMacroExecution = async () => {
       // await page.goto("https://www.whatismyip.com/");
       // await page.waitForTimeout(7000)
@@ -176,10 +176,14 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       await page.click(bettingSlip);
       await page.waitForTimeout(1000);
       console.log("double click");
-      await page.waitForSelector(bettingPutNumber);
+      console.log(bettingPutNumber)
+      await page.waitForSelector(bettingPutNumber, {timeout: 100000});
       await page.click(bettingPutNumber, { clickCount: 2 });
-      // await page.click("#mobileBetslipContainer > aside > div:nth-child(2) > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div > div > div > div.ant-input-number-input-wrap > input", {clickCount: 2})
       await page.keyboard.type(`${amountToBet.toFixed(2)}`);
+      // await clipboardy.write(`${amountToBet.toFixed(2)}`);
+      // await page.keyboard.down("Control");
+      // await page.keyboard.press("V");
+      // await page.keyboard.up("Control");
       // LOGIC FOR BETTING ADDED HERE
       console.log(game);
       console.log(`The amount to bet for this game is: ${amountToBet}`);

@@ -50,7 +50,6 @@ const gamesUpcoming = async () => {
 
 const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   console.log("Starting matchFactorToMidniteGames");
-
   const matchGames = [];
 
   if (!midniteData || !factorggData) {
@@ -75,29 +74,29 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
   };
 
   const setup = factorggData.forEach((factorGame) => {
+    console.log("fired Setup");
     const factorGameHomeTeam = factorGame.team1.fullName;
     const factorGameAwayTeam = factorGame.team2.fullName;
     const filterMidniteGame = midniteData.map(async (midniteGame) => {
       const midniteGameHomeTeam = midniteGame.home_team;
       const midniteGameAwayTeam = midniteGame.away_team;
       // formula based name
-      const factorGameHomeTeamFixed = breakDownName(factorGame.team1.fullName)
-      const factorGameAwayTeamFixed = breakDownName(factorGame.team2.fullName)
-      const midniteGameHomeTeamFixed = breakDownName(midniteGame.home_team)
-      const midniteGameAwayTeamFixed = breakDownName(midniteGame.away_team)
-      const midniteCompetition = breakDownName(midniteGame.competition_name)
-      const factorCompetition = breakDownName(factorGame.tournament.name)
+      const factorGameHomeTeamFixed = breakDownName(factorGame.team1.fullName);
+      const factorGameAwayTeamFixed = breakDownName(factorGame.team2.fullName);
+      const midniteGameHomeTeamFixed = breakDownName(midniteGame.home_team);
+      const midniteGameAwayTeamFixed = breakDownName(midniteGame.away_team);
+      const midniteCompetition = breakDownName(midniteGame.competition_name);
+      const factorCompetition = breakDownName(factorGame.tournament.name);
 
       if (
-        // (factorGameHomeTeamFixed === midniteGameHomeTeamFixed)
+        factorGameHomeTeamFixed === midniteGameHomeTeamFixed &&
         // ||factorGameHomeTeamFixed === midniteGameAwayTeamFixed
-        // &&
         // (factorGameAwayTeamFixed === midniteGameAwayTeamFixed)
         // || factorGameAwayTeamFixed === midniteGameHomeTeamFixed
         // &&
-        (Date.parse(midniteGame.start_time) ===
-        Date.parse(factorGame.matchStartDate)) &&
-        (midniteCompetition === factorCompetition)
+        Date.parse(midniteGame.start_time) ===
+          Date.parse(factorGame.matchStartDate) 
+          // && midniteCompetition === factorCompetition
       ) {
         console.log("####################################");
         console.log("top");
@@ -211,111 +210,122 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
           // console.log("############################################################")
           // console.log("############################################################")
         }
-        // }
-        // else {
-        //   console.log("broken");
-        //   if (!midniteGame.market.contracts[0]) {
-        //     return "no price";
-        //   }
-        //   console.log(midniteGame.id);
-
-        //   const matchObject = {
-        //     homeTeam: {
-        //       name: midniteGame.home_team,
-        //       prediction: factorGame.prematchWinProbability.team2Winprob,
-        //       odds: midniteGame.market.contracts[0].price,
-        //     },
-        //     awayTeam: {
-        //       name: midniteGame.away_team,
-        //       prediction: factorGame.prematchWinProbability.team1Winprob,
-        //       odds: midniteGame.market.contracts[1].price,
-        //     },
-        //     matchStart: midniteGame.start_time,
-        //     factorId: factorGame.factorId,
-        //     midniteMatchId: midniteGame.id,
-        //     upcoming: true,
-        //     betPlaced: false,
-        //     betSetup: false,
-        //     timeToBet: false,
-        //   };
-        //   console.log(
-        //     `matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
-        //   );
-        //   // console.log(matchObject);
-        //   // Bets will not be less than 0.535 prediction
-        //   if (
-        //     matchObject.homeTeam.prediction >= 0.535 ||
-        //     matchObject.awayTeam.prediction >= 0.535
-        //   ) {
-        //     console.log(
-        //       `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
-        //     );
-        //   } else {
-        //     `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
-        //       matchObject.factorId
-        //     }`;
-        //     return;
-        //   }
-        //   console.log(
-        //     `Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
-        //   );
-        //   const findMatch = await MatchesDatabase.findOne({
-        //     factorId: matchObject.factorId,
-        //   });
-        //   console.log(`calling database`);
-        //   console.log(`Checking match: ${matchObject.factorId}`);
-        //   if (!findMatch) {
-        //     console.log("Couldn't find match ID so saving object to database");
-        //     const match = await MatchesDatabase.create(matchObject);
-        //     await match.save();
-        //     console.log(matchObject);
-        //     console.log("Match should be added");
-        //   } else if (findMatch) {
-        //     console.log(
-        //       `ID Found, here's the object ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
-        //     );
-        //     console.log("Checking prediction");
-        //     if (findMatch.betPlaced === true) {
-        //       console.log("Bet placed, no need to update");
-        //       console.log(findMatch);
-        //       return;
-        //     } else if (
-        //       +findMatch.homeTeam.prediction !==
-        //         +matchObject.homeTeam.prediction ||
-        //       +findMatch.awayTeam.prediction !==
-        //         +matchObject.awayTeam.prediction
-        //     ) {
-        //       console.log("Prediction has changed");
-        //       findMatch.homeTeam.prediction = matchObject.homeTeam.prediction;
-        //       findMatch.awayTeam.prediction = matchObject.awayTeam.prediction;
-        //       await findMatch.save();
-        //       console.log(`Saved changes to prediction for ${findMatch._id}`);
-        //     } else if (
-        //       findMatch.homeTeam.odds !== matchObject.homeTeam.odds ||
-        //       findMatch.awayTeam.odds !== matchObject.awayTeam.odds
-        //     ) {
-        //       console.log("Odds have changed");
-        //       findMatch.homeTeam.odds = +matchObject.homeTeam.odds;
-        //       findMatch.awayTeam.odds = +matchObject.awayTeam.odds;
-        //       await findMatch.save();
-        //       console.log(`Saved changes to odds for ${findMatch._id}`);
-        //     }
-        //     console.log(findMatch);
-        //     console.log(`Predictions and Odds verified`);
-        //     // console.log(`Is prediction hometeams the same? ${findMatch.homeTeam.prediction === matchObject.homeTeam.prediction ? "Yes it is" : "No there's a change"}`)
-        //     // console.log(+findMatch.homeTeam.prediction)
-        //     // console.log(+matchObject.homeTeam.prediction)
-        //     // console.log(`Is odds for hometeams the same? ${findMatch.homeTeam.odds === matchObject.homeTeam.odds ? "Yes it is" : "No there's a change"}`)
-        //     // console.log(+findMatch.homeTeam.odds.toFixed(1))
-        //     // console.log(+matchObject.homeTeam.odds.toFixed(1))
-        //     // console.log("############################################################")
-        //     // console.log("############################################################")
-        //   }
-        // }
-      } else {
-        // console.log(
-        //   `Somehow this got here. FactorId ${factorGame.factorId}. Match on midnite not setup yet`
-        // );
+      }
+      // }
+      else if (
+        factorGameHomeTeamFixed === midniteGameAwayTeamFixed &&
+        // ||factorGameHomeTeamFixed === midniteGameAwayTeamFixed
+        // (factorGameAwayTeamFixed === midniteGameAwayTeamFixed)
+        // || factorGameAwayTeamFixed === midniteGameHomeTeamFixed
+        // &&
+        Date.parse(midniteGame.start_time) ===
+          Date.parse(factorGame.matchStartDate) 
+          // && midniteCompetition === factorCompetition
+      ) {
+        console.log("broken");
+        if (!midniteGame.market.contracts[0]) {
+          return "no price";
+        }
+        console.log(midniteGame.id);
+        const matchObject = {
+          homeTeam: {
+            name: midniteGame.home_team,
+            prediction: factorGame.prematchWinProbability.team2Winprob,
+            odds: midniteGame.market.contracts[0].price,
+          },
+          awayTeam: {
+            name: midniteGame.away_team,
+            prediction: factorGame.prematchWinProbability.team1Winprob,
+            odds: midniteGame.market.contracts[1].price,
+          },
+          matchStart: midniteGame.start_time,
+          factorId: factorGame.factorId,
+          midniteMatchId: midniteGame.id,
+          upcoming: true,
+          betPlaced: false,
+          betSetup: false,
+          timeToBet: false,
+        };
+        console.log(
+          `matchObject created for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+        );
+        // console.log(matchObject);
+        // Bets will not be less than 0.535 prediction
+        if (
+          matchObject.homeTeam.prediction >= 0.535 ||
+          matchObject.awayTeam.prediction >= 0.535
+        ) {
+          console.log(
+            `Good to go: https://www.midnite.com/esports/lol/match/${matchObject.midniteMatchId} / https://www.factor.gg/match/${matchObject.factorId}`
+          );
+        } else {
+          `Bet was too low: https://www.midnite.com/esports/lol/${`matchObject.midniteMatchId`} / https://www.factor.gg/match/${
+            matchObject.factorId
+          }`;
+          return;
+        }
+        console.log(
+          `Search for ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+        );
+        const findMatch = await MatchesDatabase.findOne({
+          factorId: matchObject.factorId,
+        });
+        console.log(`calling database`);
+        console.log(`Checking match: ${matchObject.factorId}`);
+        if (!findMatch) {
+          console.log("Couldn't find match ID so saving object to database");
+          const match = await MatchesDatabase.create(matchObject);
+          await match.save();
+          console.log(matchObject);
+          console.log("Match should be added");
+        } else if (findMatch) {
+          console.log(
+            `ID Found, here's the object ${matchObject.homeTeam.name} / ${matchObject.awayTeam.name}`
+          );
+          console.log("Checking prediction");
+          if (findMatch.betPlaced === true) {
+            console.log("Bet placed, no need to update");
+            console.log(findMatch);
+            return;
+          } else if (
+            +findMatch.homeTeam.prediction !==
+              +matchObject.homeTeam.prediction ||
+            +findMatch.awayTeam.prediction !== +matchObject.awayTeam.prediction
+          ) {
+            console.log("Prediction has changed");
+            findMatch.homeTeam.prediction = matchObject.homeTeam.prediction;
+            findMatch.awayTeam.prediction = matchObject.awayTeam.prediction;
+            await findMatch.save();
+            console.log(`Saved changes to prediction for ${findMatch._id}`);
+          } else if (
+            findMatch.homeTeam.odds !== matchObject.homeTeam.odds ||
+            findMatch.awayTeam.odds !== matchObject.awayTeam.odds
+          ) {
+            console.log("Odds have changed");
+            findMatch.homeTeam.odds = +matchObject.homeTeam.odds;
+            findMatch.awayTeam.odds = +matchObject.awayTeam.odds;
+            await findMatch.save();
+            console.log(`Saved changes to odds for ${findMatch._id}`);
+          }
+          console.log(findMatch);
+          console.log(`Predictions and Odds verified`);
+          // console.log(`Is prediction hometeams the same? ${findMatch.homeTeam.prediction === matchObject.homeTeam.prediction ? "Yes it is" : "No there's a change"}`)
+          // console.log(+findMatch.homeTeam.prediction)
+          // console.log(+matchObject.homeTeam.prediction)
+          // console.log(`Is odds for hometeams the same? ${findMatch.homeTeam.odds === matchObject.homeTeam.odds ? "Yes it is" : "No there's a change"}`)
+          // console.log(+findMatch.homeTeam.odds.toFixed(1))
+          // console.log(+matchObject.homeTeam.odds.toFixed(1))
+          // console.log("############################################################")
+          // console.log("############################################################")
+        }
+      } else if (factorGameHomeTeamFixed === midniteGameHomeTeamFixed) {
+        console.log(
+          `FactorGame home team: ${factorGameHomeTeam} and away team: ${factorGameAwayTeam} time ${factorGame.matchStartDate}`
+        );
+        console.log(
+          `MidniteGame home team: ${midniteGameHomeTeam} and away team: ${midniteGameAwayTeam} time ${midniteGame.start_time}`
+        );
+        await new Promise((resolve) => setTimeout(resolve, 10000));
       }
     });
   });
