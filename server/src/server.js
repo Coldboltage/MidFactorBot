@@ -12,16 +12,16 @@ const pluginProxy = require('puppeteer-extra-plugin-proxy');
 
 puppeteer.use(StealthPlugin());
 
-// puppeteer.use(
-//   pluginProxy({
-//     address: "proxy.iproyal.com",
-//     port: 12323,
-//     credentials: {
-//       username: `${process.env.PROXY_USERNAME}`,
-//       password: `${process.env.PROXY_PASSWORD}`,
-//     },
-//   })
-// );
+puppeteer.use(
+  pluginProxy({
+    address: "154.28.84.12",
+    port: 29842,
+    credentials: {
+      username: `${process.env.MPP_PROXY_USERNAME}`,
+      password: `${process.env.MPP_PROXY_PASSWORD}`,
+    },
+  })
+);
 
 // Modules when server starts
 const { mongoConnect } = require("../services/mongo");
@@ -34,7 +34,7 @@ const server = http.createServer(app);
 
 const startServer = async () => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
@@ -55,7 +55,7 @@ startServer();
 cron.schedule("*/30 * * * *", async function () {
   console.log("running a task every min");
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
