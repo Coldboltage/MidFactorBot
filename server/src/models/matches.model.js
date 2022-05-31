@@ -64,7 +64,6 @@ const matchFactorToMidniteGames = async (factorggData, midniteData) => {
         .toLowerCase()
         .replace("esports", "")
         .replace("-", "")
-        // .replace("esport", "")
         .replace("gaming", "")
         .replace("academy", "")
         .replace("team", "")

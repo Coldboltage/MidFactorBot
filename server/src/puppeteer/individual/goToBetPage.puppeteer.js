@@ -23,7 +23,7 @@ const checkBetPage = require("../individual/checkBetPage.puppeteer");
 const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
   console.log("goToPage Started");
   // const browser = await puppeteer.launch({
-  //   headless: false,
+  //   headless: true,
   // });
 
   await page.setRequestInterception(true);
