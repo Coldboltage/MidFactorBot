@@ -101,8 +101,8 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
 
     await page.waitForSelector("[Component=MarketContract]");
 
-    const html = await page.content();
-    const $ = cheerio.load(html);
+    let html = await page.content();
+    let $ = cheerio.load(html);
 
     // VALIDATION TO SEE IF MARKET IS HALTED
     const marketCheck = await page.$$(
@@ -127,6 +127,14 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       console.log("Game deleted");
       await page.waitForTimeout(200);
       continue;
+    }
+
+    // Validation Passed, check to see if three way game
+    const checkDivIfThreeWay = "#content > div > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div:nth-child(1) > div > div:nth-child(3) > div.flex-auto > div > div:nth-child(2) > div:nth-child(2) > div > div:nth-child(1) > div > div:nth-child(1) > h4"
+    const deleteDivWithThreeWay = "#content > div > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > div:nth-child(1) > div > div:nth-child(3) > div.flex-auto > div > div:nth-child(2) > div:nth-child(2) > div > div:nth-child(1)"
+
+    if ($(checkDivIfThreeWay).text().includes("(3 Way)")) {
+      $(deleteDivWithThreeWay).remove()
     }
 
     const bankRollToPercentage = game.bankRoll * 100;
@@ -156,6 +164,7 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       "#__layout > div > div.bottom-0 > div > div:nth-child(1)";
     // We double click this so to allow us to add in a money input
     const bettingPutNumber = `#formulate--esports-lol-match-${game.midniteMatchId}-1`;
+    console.log(`bettingPutNumber has been established`)
     const betMacroExecution = async () => {
       // await page.goto("https://www.whatismyip.com/");
       // await page.waitForTimeout(7000)
@@ -168,6 +177,7 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       // ABOVE NEEDS DELETED: SCREENSHOT IP
       await page.waitForTimeout(200);
       try {
+        console.log("Clicking Betting Slip")
         await page.click(bettingSlip);
       } catch (error) {
         await page.waitForTimeout(5000);
@@ -256,6 +266,9 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       console.log("############ Should loop to another game ################");
     };
 
+    // Check to see if bet is three way or not
+    
+
     // Logic to figure out which button to press then execute betMacroExecution
     if ($(buttonOneText).text().includes(game.teamToWin)) {
       console.log("Clicking on first button");
@@ -271,6 +284,8 @@ const goToBetPage = async (listOfGamesToBetOn, page, browser) => {
       await page.waitForSelector(buttonTwoElement);
       await page.click(buttonTwoElement);
       await betMacroExecution();
+    } else {
+      console.log("We didn't pick anything")
     }
 
     console.log("done");
